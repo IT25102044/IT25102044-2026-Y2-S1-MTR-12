@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapPro - Customer Portal</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-accent: #3b82f6;
+      --primary-soft: #eff6ff;
+      --dark-text: #1e293b;
+      --muted-text: #64748b;
+      --surface-card: #ffffff;
+      --border-subtle: #e2e8f0;
+      --body-bg: #f8fafc;
+    }
+
+    body {
+      background-color: var(--body-bg);
+      color: var(--dark-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      min-height: 100vh;
+      background-color: var(--surface-card);
+      border-right: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .nav-link {
+      color: var(--muted-text);
+      font-weight: 500;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-accent);
+      background-color: var(--primary-soft);
+    }
+
+    /* Custom Cards */
+    .stat-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .package-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .package-card.featured {
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .badge-soft-warning {
+      background-color: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fef3c7;
+    }
+
+    .badge-soft-success {
+      background-color: #ecfdf5;
+      color: #047857;
+      border: 1px solid #d1fae5;
+    }
+
+    .badge-soft-danger {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fee2e2;
+    }
+
+    .badge-soft-primary {
+      background-color: var(--primary-soft);
+      color: var(--primary-accent);
+      border: 1px solid #dbeafe;
+    }
+
+    .gallery-img {
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Desktop Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4 sticky-top">
+      <div class="d-flex align-items-center mb-4 px-2">
+        <i class="bi bi-camera-reels-fill text-primary fs-3 me-2"></i>
+        <h5 class="mb-0 fw-bold tracking-tight">SnapPro</h5>
+      </div>
+      <ul class="nav flex-column mb-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+            <i class="bi bi-grid-1x2 me-2"></i> Overview
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#bookings" data-bs-toggle="tab">
+            <i class="bi bi-calendar-event me-2"></i> My Bookings
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#packages" data-bs-toggle="tab">
+            <i class="bi bi-bag-check me-2"></i> Service Packages
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#gallery" data-bs-toggle="tab">
+            <i class="bi bi-images me-2"></i> Event Photos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#feedback" data-bs-toggle="tab">
+            <i class="bi bi-chat-left-quote me-2"></i> Reviews & Feedback
+          </a>
+        </li>
+      </ul>
+      <hr class="text-secondary opacity-25 my-4" />
+      <div class="px-2">
+        <div class="d-flex align-items-center mb-3">
+          <div id="customerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 38px; height: 38px; font-size: 14px; font-weight: 600;">
+            AL
+          </div>
+          <div class="overflow-hidden">
+            <p id="customerName" class="mb-0 fw-semibold text-truncate" style="font-size: 14px;">Amanda Lewis</p>
+            <span id="customerEmail" class="text-muted" style="font-size: 12px;">Customer</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="signOut()">
+          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Top Navigation Bar -->
+    <nav class="navbar d-md-none bg-white border-bottom px-3 py-2 sticky-top">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-camera-reels-fill text-primary fs-4 me-2"></i>
+        <span class="fw-bold fs-5">SnapPro</span>
+      </div>
+      <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+    </nav>
+
+    <!-- Mobile Offcanvas Menu -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold">SnapPro Menu</h5>
+        <button type="button" class="btn-close" data-bs-target="#mobileMenu" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-grid-1x2 me-2"></i> Overview
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#bookings" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-calendar-event me-2"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#packages" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-bag-check me-2"></i> Service Packages
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#gallery" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-images me-2"></i> Event Photos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#feedback" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-chat-left-quote me-2"></i> Reviews & Feedback
+            </a>
+          </li>
+        </ul>
+        <hr class="text-secondary opacity-25 my-3" />
+        <div class="d-flex align-items-center mb-3">
+          <div id="mobileCustomerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 38px; height: 38px; font-size: 14px; font-weight: 600;">
+            AL
+          </div>
+          <div class="overflow-hidden">
+            <p id="mobileCustomerName" class="mb-0 fw-semibold text-truncate" style="font-size: 14px;">Amanda Lewis</p>
+            <span class="text-muted" style="font-size: 12px;">Customer</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="signOut()">
+          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+      <div class="tab-content">
+
+        <!-- TAB 1: OVERVIEW & DASHBOARD -->
+        <div class="tab-pane fade show active" id="dashboard">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+            <div>
+              <h3 id="welcomeCustomerName" class="fw-bold mb-1">Welcome back, Amanda! 👋</h3>
+              <p class="text-muted mb-0">Track your photography appointments, manage photo galleries, and book new shoots.</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newBookingModal">
+              <i class="bi bi-plus-circle me-1"></i> Book Photography
+            </button>
+          </div>
+
+          <!-- Quick Metrics -->
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="stat-card p-3 d-flex align-items-center">
+                <div class="bg-primary-subtle text-primary p-3 rounded-circle me-3">
+                  <i class="bi bi-camera fs-4"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Active Shoots</h6>
+                  <h4 class="mb-0 fw-bold">1</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="stat-card p-3 d-flex align-items-center">
+                <div class="bg-warning-subtle text-warning p-3 rounded-circle me-3">
+                  <i class="bi bi-clock-history fs-4"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Pending Approval</h6>
+                  <h4 class="mb-0 fw-bold">1</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="stat-card p-3 d-flex align-items-center">
+                <div class="bg-success-subtle text-success p-3 rounded-circle me-3">
+                  <i class="bi bi-check2-circle fs-4"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Completed Events</h6>
+                  <h4 class="mb-0 fw-bold">3</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="stat-card p-3 d-flex align-items-center">
+                <div class="bg-info-subtle text-info p-3 rounded-circle me-3">
+                  <i class="bi bi-cloud-arrow-down fs-4"></i>
+                </div>
+                <div>
+                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Ready Galleries</h6>
+                  <h4 class="mb-0 fw-bold">2</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Next Upcoming Event & Action Banner -->
+          <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                  <span class="badge badge-soft-primary mb-2">Upcoming Confirmed Event</span>
+                  <h4 class="fw-bold mb-1">Corporate Annual Gala 2026</h4>
+                  <p class="text-muted mb-2">
+                    <i class="bi bi-geo-alt me-1"></i> Grand Ballroom, Hilton Colombo &nbsp;|&nbsp; 
+                    <i class="bi bi-calendar3 me-1"></i> Oct 24, 2026 &nbsp;|&nbsp; 
+                    <i class="bi bi-clock me-1"></i> 05:00 PM - 10:00 PM
+                  </p>
+                  <p class="small text-muted mb-0">Assigned Photographer: <strong>Ruwan Silva (Senior Event Specialist)</strong></p>
+                </div>
+                <div>
+                  <a href="#gallery" data-bs-toggle="tab" class="btn btn-outline-primary btn-sm">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Bookings Quick View -->
+          <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+              <h5 class="fw-bold mb-0">Recent Bookings</h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-middle table-hover mb-0">
+                <thead class="table-light">
+                  <tr style="font-size: 13px;">
+                    <th>BOOKING ID</th>
+                    <th>EVENT TITLE</th>
+                    <th>PACKAGE</th>
+                    <th>EVENT DATE</th>
+                    <th>TOTAL</th>
+                    <th>STATUS</th>
+                    <th class="text-end">ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardRecentTable">
+                  <tr>
+                    <td colspan="7" class="text-center text-muted py-3">Loading recent bookings...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: MY BOOKINGS (FULL LIST) -->
+        <div class="tab-pane fade" id="bookings">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h3 class="fw-bold mb-1">Booking History & Status</h3>
+              <p class="text-muted mb-0">Monitor request statuses submitted through the portal.</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customBookingModal">
+              <i class="bi bi-stars me-1"></i> Custom Booking Request
+            </button>
+          </div>
+
+          <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="customerBookingList">
+                  <thead class="table-light">
+                    <tr style="font-size: 13px;">
+                      <th>EVENT TITLE</th>
+                      <th>LOCATION</th>
+                      <th>DATE & TIME</th>
+                      <th>PACKAGE / ADVANCE</th>
+                      <th>BALANCE (AT EVENT)</th>
+                      <th>STATUS</th>
+                      <th class="text-end">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="7" class="text-center text-muted py-4">Loading your bookings...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: PACKAGES CATALOG -->
+        <div class="tab-pane fade" id="packages">
+          <div class="mb-4">
+            <h3 class="fw-bold mb-1">Available Photography Packages</h3>
+            <p class="text-muted mb-0">Browse packages curated by our Marketing team. Choose one to request your date.</p>
+          </div>
+
+          <div class="row g-4" id="packagesContainer">
+            <div class="col-12 text-center py-5">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading packages...</span>
+              </div>
+              <p class="text-muted mt-2 small">Loading available photography packages...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: EVENT GALLERY -->
+        <div class="tab-pane fade" id="gallery">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h3 class="fw-bold mb-1">Deliverables & Event Gallery</h3>
+              <p class="text-muted mb-0">Browse and download photos uploaded by your senior event photographer.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-download me-1"></i> Download All ZIP</button>
+          </div>
+
+          <!-- Album Filter Selector -->
+          <div class="bg-white p-3 rounded-3 border mb-4">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold text-muted">Select Event Album:</label>
+                <select class="form-select">
+                  <option selected>Tech Symposium Keynote - Completed (24 Photos)</option>
+                  <option>Corporate Annual Gala 2025 - Archived (118 Photos)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photos Grid -->
+          <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card h-100 border-0 shadow-sm p-2">
+                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=500&q=80" class="gallery-img mb-2" alt="Keynote Speaker" />
+                <div class="d-flex justify-content-between align-items-center px-1">
+                  <small class="text-truncate fw-semibold">Keynote_01.jpg</small>
+                  <a href="#" class="text-primary"><i class="bi bi-arrow-down-circle fs-5"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card h-100 border-0 shadow-sm p-2">
+                <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=500&q=80" class="gallery-img mb-2" alt="Stage Audience" />
+                <div class="d-flex justify-content-between align-items-center px-1">
+                  <small class="text-truncate fw-semibold">Audience_Wide.jpg</small>
+                  <a href="#" class="text-primary"><i class="bi bi-arrow-down-circle fs-5"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card h-100 border-0 shadow-sm p-2">
+                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=500&q=80" class="gallery-img mb-2" alt="Panel Discussion" />
+                <div class="d-flex justify-content-between align-items-center px-1">
+                  <small class="text-truncate fw-semibold">Panel_QandA.jpg</small>
+                  <a href="#" class="text-primary"><i class="bi bi-arrow-down-circle fs-5"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card h-100 border-0 shadow-sm p-2">
+                <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=500&q=80" class="gallery-img mb-2" alt="Networking Lunch" />
+                <div class="d-flex justify-content-between align-items-center px-1">
+                  <small class="text-truncate fw-semibold">Breakout_Discussion.jpg</small>
+                  <a href="#" class="text-primary"><i class="bi bi-arrow-down-circle fs-5"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: REVIEWS & FEEDBACK -->
+        <div class="tab-pane fade" id="feedback">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h3 class="fw-bold mb-1">Feedback & Inquiries</h3>
+              <p class="text-muted mb-0">Share your shooting experience with our team or report any concerns.</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+              <i class="bi bi-star me-1"></i> Submit Review
+            </button>
+          </div>
+
+          <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-4">
+              <h6 class="fw-bold mb-3">Your Submitted Feedback</h6>
+              <div class="border rounded p-3 mb-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div>
+                    <strong>Tech Symposium Keynote</strong>
+                    <div class="text-warning small mt-1">
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <span class="text-dark ms-2 fw-semibold">5.0 / 5</span>
+                    </div>
+                  </div>
+                  <span class="badge bg-success-subtle text-success">Resolved & Published</span>
+                </div>
+                <p class="text-muted small mb-2">"The photographer arrived 30 minutes early, coordinated with our sound crew smoothly, and delivered the preview photos the same evening! Exceptional service."</p>
+                <div class="bg-white p-2 rounded border-start border-3 border-primary small">
+                  <span class="fw-bold text-primary">Client Relations Officer Response:</span> Thank you for trusting SnapPro Amanda! It was our pleasure covering the symposium.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL: SUBMIT NEW BOOKING REQUEST (UC-01 Scenario) -->
+<div class="modal fade" id="newBookingModal" tabindex="-1" aria-labelledby="newBookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-bottom px-4 py-3">
+        <h5 class="modal-title fw-bold" id="newBookingModalLabel">Request Event Photography</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="bookingForm" onsubmit="handleBookingSubmit(event)">
+        <div class="modal-body px-4 py-3">
+          <div class="alert alert-danger d-none" id="bookingAlert" role="alert"></div>
+
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Photography Package</label>
+              <select class="form-select" id="packageSelect" required>
+                <option value="">Choose a standardized package...</option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Event Title</label>
+              <input type="text" class="form-control" id="eventTitle" placeholder="e.g., Annual Tech Meetup" required />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Event Location Address</label>
+              <input type="text" class="form-control" id="eventLocation" placeholder="Full venue location or address" required />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold small">Event Date</label>
+              <input type="date" class="form-control" id="eventDate" required />
+            </div>
+
+            <div class="col-6 col-md-4">
+              <label class="form-label fw-semibold small">Start Time</label>
+              <input type="time" class="form-control" id="startTime" required />
+            </div>
+
+            <div class="col-6 col-md-4">
+              <label class="form-label fw-semibold small">End Time</label>
+              <input type="time" class="form-control" id="endTime" required />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold small d-flex justify-content-between flex-wrap">
+                <span>Any Additional Requirements? / Leave Blank</span>
+                <span class="text-primary fw-normal" style="font-size: 12px;">
+                  <i class="bi bi-info-circle me-1"></i>For additional requirements the price will increase and it will be collected at the event date
+                </span>
+              </label>
+              <textarea class="form-control" id="customNotes" rows="3" placeholder="Tell us specific moments to capture, drone coverage, dress codes, or logistics..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-top px-4 py-3 bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4">Submit Booking Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CUSTOM REQUEST EVENT PHOTOGRAPHY -->
+<div class="modal fade" id="customBookingModal" tabindex="-1" aria-labelledby="customBookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-bottom px-4 py-3">
+        <h5 class="modal-title fw-bold" id="customBookingModalLabel">
+          <i class="bi bi-stars text-primary me-2"></i>Custom Request Event Photography
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="customBookingForm" onsubmit="handleCustomBookingSubmit(event)">
+        <div class="modal-body px-4 py-3">
+          <div class="alert alert-danger d-none" id="customBookingAlert" role="alert"></div>
+
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Photography Package</label>
+              <div class="form-control bg-light text-primary fw-semibold d-flex align-items-center">
+                <i class="bi bi-patch-check-fill me-2 text-primary"></i>Custom Requirement Event (Advance LKR 3000)
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold small">Event Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="customEventTitle" placeholder="e.g., Beachside Music Festival" required />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold small">Event Location Address <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="customEventLocation" placeholder="Full venue location or address" required />
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-semibold small">Event Date <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="customEventDate" required />
+            </div>
+
+            <div class="col-6 col-md-4">
+              <label class="form-label fw-semibold small">Start Time <span class="text-danger">*</span></label>
+              <input type="time" class="form-control" id="customStartTime" required />
+            </div>
+
+            <div class="col-6 col-md-4">
+              <label class="form-label fw-semibold small">End Time <span class="text-danger">*</span></label>
+              <input type="time" class="form-control" id="customEndTime" required />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold small text-dark d-flex justify-content-between flex-wrap">
+                <span>Custom Requirements / Event Details <span class="text-danger">*</span></span>
+                <span class="text-danger fw-normal" style="font-size: 11px;">(Mandatory)</span>
+              </label>
+              <textarea class="form-control" id="customRequirementsNotes" rows="4" placeholder="Please describe your event requirements in detail (e.g. number of photographers, drone coverage, studio lighting, specific moments to capture, expected guest count)..." required></textarea>
+              <div class="form-text text-muted mt-2" style="font-size: 12px;">
+                <i class="bi bi-info-circle me-1 text-primary"></i>An advance fee of <strong>LKR 3,000.00</strong> will be recorded upon submission. Final charges will be calculated based on your custom requirements and collected on the event date.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-top px-4 py-3 bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4"><i class="bi bi-send me-1"></i>Submit Custom Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LEAVE REVIEW & FEEDBACK -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title fw-bold">Leave Service Feedback</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form onsubmit="handleReviewSubmit(event)">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Select Completed Event</label>
+            <select class="form-select" required>
+              <option value="Tech Symposium Keynote">Tech Symposium Keynote (Jul 12, 2026)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Rating (1 to 5 Stars)</label>
+            <select class="form-select" id="reviewRating" required>
+              <option value="5">★★★★★ (5/5) - Excellent</option>
+              <option value="4">★★★★☆ (4/5) - Good</option>
+              <option value="3">★★★☆☆ (3/5) - Average</option>
+              <option value="2">★★☆☆☆ (2/5) - Poor</option>
+              <option value="1">★☆☆☆☆ (1/5) - Very Bad</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">Your Review</label>
+            <textarea class="form-control" id="reviewComments" rows="3" placeholder="Describe the photographer punctuality, photo quality, and customer support..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CUSTOMER VIEW BOOKING DETAILS -->
+<div class="modal fade" id="customerBookingDetailsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header border-bottom px-4 py-3 bg-light">
+        <div class="d-flex align-items-center">
+          <div class="bg-primary text-white p-2 rounded-3 me-3">
+            <i class="bi bi-calendar-event fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold mb-0" id="custDetailBookingRef">#EVT-XXXX</h5>
+            <small class="text-muted" id="custDetailCreatedAt">Submitted on ...</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body px-4 py-4">
+        <div class="row g-4">
+          <!-- Event Info -->
+          <div class="col-12 col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100 border">
+              <h6 class="fw-bold text-uppercase text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i> Event Details</h6>
+              <div class="mb-1"><strong id="custDetailEventTitle">-</strong></div>
+              <div class="small text-muted mb-2"><span id="custDetailEventLocation">-</span></div>
+              <div class="small text-dark fw-semibold"><i class="bi bi-clock me-1"></i> <span id="custDetailEventDateTime">-</span></div>
+            </div>
+          </div>
+
+          <!-- Package Info -->
+          <div class="col-12 col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100 border">
+              <h6 class="fw-bold text-uppercase text-muted small mb-2"><i class="bi bi-camera me-1"></i> Photography Package</h6>
+              <div class="mb-2"><span class="badge bg-primary-subtle text-primary border" id="custDetailPackageTitle">-</span></div>
+              <div class="small text-muted mb-1">Status: <span class="badge badge-soft-warning" id="custDetailBookingStatus">Pending</span></div>
+              <div class="small text-muted">Payment: <span class="badge bg-white text-dark border" id="custDetailPaymentMethod">Cash on Event Date</span></div>
+            </div>
+          </div>
+
+          <!-- Special Requests / Custom Requirements -->
+          <div class="col-12">
+            <div class="p-3 bg-light rounded-3 border">
+              <h6 class="fw-bold text-uppercase text-muted small mb-2"><i class="bi bi-card-text me-1"></i> Special Requests / Custom Requirements</h6>
+              <div class="p-3 bg-white rounded border small">
+                <p class="mb-0 text-dark" id="custDetailCustomReqs">None specified.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Breakdown & Outstanding Balance -->
+          <div class="col-12">
+            <div class="p-3 bg-light rounded-3 border">
+              <h6 class="fw-bold text-uppercase text-muted small mb-3"><i class="bi bi-cash-stack me-1"></i> Pricing & Payment Breakdown</h6>
+              <div class="row g-3">
+                <div class="col-12 col-sm-4">
+                  <small class="text-muted d-block">Advance / Base Fee</small>
+                  <strong class="text-dark fs-6" id="custDetailTotalAmount">LKR 0.00</strong>
+                </div>
+                <div class="col-12 col-sm-4">
+                  <small class="text-muted d-block">Outstanding Balance (To Collect at Event)</small>
+                  <strong class="text-warning fs-6" id="custDetailBalanceAmount">LKR 0.00</strong>
+                </div>
+                <div class="col-12 col-sm-4">
+                  <small class="text-muted d-block">Total Estimated Cost</small>
+                  <strong class="text-primary fs-6" id="custDetailTotalPayable">LKR 0.00</strong>
+                </div>
+              </div>
+              <div class="alert alert-info py-2 px-3 small mt-3 mb-0">
+                <i class="bi bi-info-circle me-1"></i> <strong>Note:</strong> Any remaining balance for extra requirements will be collected and settled at the event venue.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-top px-4 py-3 bg-light">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Customer Dashboard JS -->
+<script src="js/Admin&Customer/customer-dashboard.js"></script>
+
+<script>
+  // Handle UC-02: Review Submission
+  function handleReviewSubmit(event) {
+    event.preventDefault();
+    const modalEl = document.getElementById('reviewModal');
+    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    modalInstance.hide();
+    alert('Thank you! Your review has been submitted for verification.');
+  }
+</script>
+</body>
+</html>
