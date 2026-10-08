@@ -31,6 +31,9 @@ function getDashboardForRole(role) {
         case 'OPERATIONMANAGER':
             return 'operationManager-dashboard.html';
         case 'PHOTOGRAPHER':
+        case 'LEAD_PHOTOGRAPHER':
+        case 'SENIOR_PHOTOGRAPHER':
+        case 'SENIOREVENTPHOTOGRAPHER':
             return 'photographer.html';
         case 'EQUIPMENT_MANAGER':
         case 'EQUIPMENT':

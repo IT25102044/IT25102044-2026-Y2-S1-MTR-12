@@ -1,0 +1,2363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SnapPro - Senior Event Photographer</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-accent: #2563eb;
+            --primary-subtle: #eff6ff;
+            --surface-card: #ffffff;
+            --border-subtle: #e2e8f0;
+            --body-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont,
+            "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        /* ================================
+           SIDEBAR
+        ================================= */
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: var(--surface-card);
+            border-right: 1px solid var(--border-subtle);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-accent);
+            background-color: var(--primary-subtle);
+        }
+
+        /* ================================
+           CARDS
+        ================================= */
+
+        .stat-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
+        .event-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .event-card:hover {
+            border-color: var(--primary-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        /* ================================
+           BADGES
+        ================================= */
+
+        .badge-soft-success {
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #d1fae5;
+        }
+
+        .badge-soft-warning {
+            background-color: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fef3c7;
+        }
+
+        .badge-soft-danger {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fee2e2;
+        }
+
+        .badge-soft-primary {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+        }
+
+        /* ================================
+           UPLOAD AREA
+        ================================= */
+
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-accent);
+            background-color: var(--primary-subtle);
+        }
+
+        /* ================================
+           PHOTO CARDS
+        ================================= */
+
+        .photo-card {
+            background-color: white;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .photo-preview {
+            height: 200px;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .empty-photo-preview {
+            font-size: 50px;
+            color: #94a3b8;
+        }
+
+        /* ================================
+           SELECTED EVENT
+        ================================= */
+
+        .selected-event-box {
+            background-color: white;
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--primary-accent);
+            border-radius: 8px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- ============================================
+             DESKTOP SIDEBAR
+        ============================================= -->
+
+        <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4 sticky-top">
+
+            <!-- Logo -->
+            <div class="d-flex align-items-center mb-4 px-2">
+
+                <i class="bi bi-camera-reels-fill text-primary fs-3 me-2"></i>
+
+                <h5 class="mb-0 fw-bold">
+                    SnapPro
+                </h5>
+
+            </div>
+
+            <div class="small text-uppercase text-muted fw-bold px-2 mb-2"
+                 style="font-size:11px;">
+
+                Photographer Portal
+
+            </div>
+
+            <!-- Navigation -->
+            <ul class="nav flex-column mb-auto">
+
+                <!-- Select Event -->
+                <li class="nav-item">
+
+                    <a class="nav-link active"
+                       href="#select-event"
+                       data-bs-toggle="tab">
+
+                        <i class="bi bi-calendar-event me-2"></i>
+
+                        Select Event
+
+                    </a>
+
+                </li>
+
+                <!-- Event Album -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="#event-catalogs"
+                       data-bs-toggle="tab">
+
+                        <i class="bi bi-journal-album me-2"></i>
+
+                        Event Album
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="#photographer-profile"
+                       data-bs-toggle="tab">
+
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        Profile
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+            <hr class="text-secondary opacity-25 my-4">
+
+            <!-- Stakeholder profile -->
+            <div class="px-2">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="rounded-circle bg-dark text-white fw-bold
+                                d-flex align-items-center justify-content-center me-2"
+                         style="width:38px;height:38px;font-size:13px;">
+
+                        <span id="sidebarInitials">SP</span>
+
+                    </div>
+
+                    <div>
+
+                        <p class="mb-0 fw-semibold small" id="sidebarName">
+                            Senior Photographer
+                        </p>
+
+                        <span class="text-muted"
+                              style="font-size:11px;" id="sidebarRole">
+
+                            Event Photography
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- Logout Button -->
+                <button
+                    class="btn btn-outline-danger btn-sm w-100 mt-3"
+                    onclick="logout()">
+
+                    <i class="bi bi-box-arrow-right me-1"></i>
+                    Logout
+
+                </button>
+
+            </div>
+
+        </nav>
+
+
+        <!-- ============================================
+             MOBILE TOP BAR
+        ============================================= -->
+
+        <nav class="navbar d-md-none bg-white border-bottom px-3 py-2 sticky-top">
+
+            <div class="d-flex align-items-center">
+
+                <i class="bi bi-camera-reels-fill text-primary fs-4 me-2"></i>
+
+                <span class="fw-bold fs-5">
+                    SnapPro
+                </span>
+
+            </div>
+
+            <button class="btn btn-outline-secondary btn-sm"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileMenu">
+
+                <i class="bi bi-list fs-5"></i>
+
+            </button>
+
+        </nav>
+
+
+        <!-- ============================================
+             MOBILE MENU
+        ============================================= -->
+
+        <div class="offcanvas offcanvas-start"
+             tabindex="-1"
+             id="mobileMenu">
+
+            <div class="offcanvas-header border-bottom">
+
+                <h5 class="offcanvas-title fw-bold">
+                    Photographer Portal
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="offcanvas">
+                </button>
+
+            </div>
+
+            <div class="offcanvas-body">
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link active"
+                           href="#select-event"
+                           data-bs-toggle="tab"
+                           data-bs-dismiss="offcanvas">
+
+                            <i class="bi bi-calendar-event me-2"></i>
+
+                            Select Event
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#event-catalogs"
+                           data-bs-toggle="tab"
+                           data-bs-dismiss="offcanvas">
+
+                            <i class="bi bi-journal-album me-2"></i>
+
+                            Event Album
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#photographer-profile"
+                           data-bs-toggle="tab"
+                           data-bs-dismiss="offcanvas">
+
+                            <i class="bi bi-person-circle me-2"></i>
+
+                            Profile
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================================
+             MAIN CONTENT
+        ============================================= -->
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+
+            <div class="tab-content">
+
+
+                <!-- ==================================================
+                     SEP-01 : SELECT EVENT
+                =================================================== -->
+
+                <!-- ==================================================
+                     SEP-01 : SELECT EVENT TAB PANE
+                =================================================== -->
+
+                <div class="tab-pane fade show active"
+                     id="select-event">
+
+                    <div class="mb-4">
+
+                        <h3 class="fw-bold mb-1">
+                            Select Event
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            Select an event below to create or manage its custom photo album.
+                        </p>
+
+                    </div>
+
+                    <div class="row g-4" id="bookingEventsContainer"></div>
+
+                    <p id="bookingEventsMessage" class="text-muted py-3 mb-0">
+                        Loading bookings...
+                    </p>
+
+                </div>
+
+                <div class="tab-pane fade"
+                     id="photographer-profile">
+
+                    <div class="mb-4">
+                        <h3 class="fw-bold mb-1">Profile</h3>
+                        <p class="text-muted mb-0">Manage your photographer account and profile information.</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-12 col-xl-8">
+                            <section class="card border-0 shadow-sm rounded-3 p-4">
+                                <h5 class="fw-bold mb-4">Personal and Photographer Information</h5>
+
+                                <form id="photographerProfileForm" onsubmit="savePhotographerProfile(event)">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="profileFirstName">First Name</label>
+                                            <input class="form-control" id="profileFirstName" maxlength="45" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="profileLastName">Last Name</label>
+                                            <input class="form-control" id="profileLastName" maxlength="45" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="profileMobile">Mobile Number</label>
+                                            <input class="form-control" id="profileMobile" type="tel" maxlength="15" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="profileEmail">Email Address</label>
+                                            <input class="form-control" id="profileEmail" type="email" readonly aria-readonly="true">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="profileExperienceYears">Experience (Years)</label>
+                                            <input class="form-control" id="profileExperienceYears" type="number" min="0" step="1" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" for="profileBio">Bio</label>
+                                            <textarea class="form-control" id="profileBio" rows="4" placeholder="Tell clients about your photography experience."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div id="profileSaveMessage" class="alert d-none mt-3 mb-0" role="status"></div>
+
+                                    <div class="d-flex justify-content-end mt-4">
+                                        <button class="btn btn-primary" id="saveProfileButton" type="submit">
+                                            <i class="bi bi-check2 me-1"></i>Save Profile
+                                        </button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+
+                        <div class="col-12 col-xl-8">
+                            <section class="card border-0 shadow-sm rounded-3 p-4">
+                                <h5 class="fw-bold mb-1">Password</h5>
+                                <p class="text-muted small mb-4">Your current password is not displayed. Password changes are unavailable until the group login system is updated.</p>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="currentProfilePassword">Current Password</label>
+                                    <input class="form-control" id="currentProfilePassword" type="password" value="Not displayed" readonly aria-readonly="true" autocomplete="off">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="newProfilePassword">New Password</label>
+                                    <div class="input-group">
+                                        <input class="form-control" id="newProfilePassword" type="password" minlength="8" autocomplete="new-password">
+                                        <button class="btn btn-outline-secondary" type="button" title="Show new password" aria-label="Show new password" onclick="toggleProfilePassword('newProfilePassword', this)">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="confirmProfilePassword">Re-enter New Password</label>
+                                    <div class="input-group">
+                                        <input class="form-control" id="confirmProfilePassword" type="password" minlength="8" autocomplete="new-password">
+                                        <button class="btn btn-outline-secondary" type="button" title="Show re-entered password" aria-label="Show re-entered password" onclick="toggleProfilePassword('confirmProfilePassword', this)">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="passwordChangeMessage" class="alert d-none mb-3" role="status"></div>
+
+                                <div class="d-flex align-items-center gap-3">
+                                    <button class="btn btn-outline-primary" id="changeProfilePasswordButton" type="button" onclick="changePhotographerPassword()">
+                                        <i class="bi bi-key me-1"></i>Change Password
+                                    </button>
+                                    <span id="passwordChangeSuccess" class="d-none" role="status" aria-label="Password changed successfully">
+                                        <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                    </span>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ==================================================
+                     EVENT ALBUM TAB PANE
+                =================================================== -->
+
+                <div class="tab-pane fade"
+                     id="event-catalogs">
+
+                    <div class="mb-4">
+
+                        <h3 class="fw-bold mb-1">
+                            Event Album
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            View albums, create new albums, or manage photographs inside an album for the selected event.
+                        </p>
+
+                    </div>
+
+
+                    <!-- 1. ALBUMS OVERVIEW SECTION -->
+
+                    <div id="eventCatalogsSection" class="mb-5">
+
+                        <div class="card border-0 shadow-sm rounded-3 p-4">
+
+                            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-2">
+
+                                <button class="btn btn-primary d-none"
+                                    id="createCatalogHeaderButton"
+                                    onclick="openCreateCatalogModal()">
+
+                                    <i class="bi bi-folder-plus me-1"></i>
+                                    Create New Album
+
+                                </button>
+
+                            </div>
+
+                            <!-- Albums Container Grid -->
+                            <div class="row g-4" id="catalogsContainer">
+
+                                <!-- Dynamically loaded album cards -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 2. IN-ALBUM PHOTOS MANAGEMENT SECTION -->
+
+                    <div id="catalogPhotosSection" class="d-none">
+
+                        <div class="card border-0 shadow-sm rounded-3 p-4">
+
+                            <!-- Active Album Header -->
+                            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-2">
+
+                                <div>
+
+                                    <button class="btn btn-sm btn-outline-secondary mb-2" onclick="backToCatalogs()">
+
+                                        <i class="bi bi-arrow-left me-1"></i> Back to Albums
+
+                                    </button>
+
+                                    <h4 class="fw-bold mb-1" id="activeCatalogHeader">
+
+                                        Album Photos
+
+                                    </h4>
+
+                                    <p class="text-muted small mb-0" id="activeCatalogDescription">
+
+                                        Manage and view photographs in this album.
+
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#catalogUploadCollapse">
+
+                                        <i class="bi bi-cloud-arrow-up me-1"></i>
+                                        Upload Photos to Album
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- INLINE PHOTO UPLOAD ZONE -->
+                            <div class="collapse mb-4" id="catalogUploadCollapse">
+
+                                <div class="card border rounded-3 p-4 bg-light">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                        <h6 class="fw-bold mb-0 text-primary">
+
+                                            <i class="bi bi-folder-symlink me-2"></i>Upload Photos to this Album
+
+                                        </h6>
+
+                                        <button class="btn-close" type="button" data-bs-toggle="collapse" data-bs-target="#catalogUploadCollapse"></button>
+
+                                    </div>
+
+                                    <div class="upload-area bg-white" onclick="openFileSelector()">
+
+                                        <i class="bi bi-cloud-arrow-up text-primary" style="font-size:45px;"></i>
+
+                                        <h6 class="fw-bold mt-2">
+
+                                            Select Event Photos
+
+                                        </h6>
+
+                                        <p class="text-muted small mb-3">
+
+                                            Click here to choose one or multiple photos (JPG, JPEG, PNG - Max 10MB each)
+
+                                        </p>
+
+                                        <button type="button" class="btn btn-sm btn-primary">
+
+                                            <i class="bi bi-folder2-open me-1"></i> Choose Photos
+
+                                        </button>
+
+                                        <input type="file"
+                                               id="photoInput"
+                                               accept=".jpg,.jpeg,.png"
+                                               multiple
+                                               hidden>
+
+                                    </div>
+
+                                    <div id="validationResult" class="mt-3"></div>
+
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                onclick="clearSelectedPhotos()">
+
+                                            Clear
+
+                                        </button>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary"
+                                                onclick="uploadPhotos()">
+
+                                            <i class="bi bi-cloud-check me-1"></i>
+
+                                            Upload Valid Photos
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="row g-3 mb-4">
+
+                                <div class="col-md-10">
+
+                                    <label class="form-label small fw-semibold" for="photoSearch">Search photos</label>
+
+                                    <input type="search" id="photoSearch" class="form-control" placeholder="Search by title or file name" oninput="renderPhotos()">
+
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-end">
+
+                                    <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+
+                                        Reset
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Gallery Header -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                <h5 class="fw-bold mb-0">Album Photos</h5>
+
+                                <span class="badge badge-soft-primary" id="photoCount">
+
+                                    0 Photos
+
+                                </span>
+
+                            </div>
+
+                            <!-- Photo Gallery Grid -->
+                            <div class="row g-4" id="photoGallery">
+
+                                <!-- Photos dynamically rendered here -->
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VIEW PHOTO MODAL
+========================================================== -->
+
+<div class="modal fade"
+     id="viewPhotoModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+                    View Photo
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="text-center mb-4">
+
+                    <img id="viewPhotoImage"
+                         class="img-fluid rounded"
+                         style="max-height:450px;"
+                         alt="Event Photo">
+
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Photo Title
+                        </small>
+
+                        <p class="fw-semibold"
+                           id="viewPhotoTitle">
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            File Name
+                        </small>
+
+                        <p class="fw-semibold"
+                           id="viewPhotoFileName">
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            File Type
+                        </small>
+
+                        <p class="fw-semibold"
+                           id="viewPhotoType">
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            File Size
+                        </small>
+
+                        <p class="fw-semibold"
+                           id="viewPhotoSize">
+                        </p>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Description
+                        </small>
+
+                        <p id="viewPhotoDescription">
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EDIT PHOTO DETAILS / UPDATE METADATA MODAL
+========================================================== -->
+
+<div class="modal fade"
+     id="editPhotoModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+                    Edit Photo Details
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="editPhotoId">
+
+
+                <!-- Title -->
+
+                <div class="mb-3">
+
+                    <label class="form-label small fw-semibold">
+                        Photo Title
+                    </label>
+
+                    <input type="text"
+                           id="editPhotoTitle"
+                           class="form-control">
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="mb-3">
+
+                    <label class="form-label small fw-semibold">
+                        Description
+                    </label>
+
+                    <textarea id="editPhotoDescription"
+                              class="form-control"
+                              rows="3"></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        onclick="updatePhotoDetails()">
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM DELETE PHOTO MODAL
+========================================================== -->
+
+<div class="modal fade"
+     id="deletePhotoModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold text-danger">
+
+                    Confirm Delete Photo
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="deletePhotoId">
+
+                <p class="mb-2">
+
+                    Are you sure you want to delete this photo?
+
+                </p>
+
+                <p class="text-muted small mb-0">
+
+                    This photo will be removed from the selected event.
+
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="confirmDeletePhoto()">
+
+                    <i class="bi bi-trash me-1"></i>
+
+                    Delete Photo
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CREATE ALBUM MODAL
+========================================================== -->
+
+<div class="modal fade"
+     id="createCatalogModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+
+                    <i class="bi bi-folder-plus text-primary me-2"></i>
+                    Create New Album
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3" id="createCatalogEventDropdownSection">
+
+                    <label class="form-label small fw-semibold" for="createCatalogBookingSelect">
+                        Select Event <span class="text-danger">*</span>
+                    </label>
+
+                    <select id="createCatalogBookingSelect"
+                            class="form-select"
+                            required
+                            onchange="updateCreateCatalogSelectionState()">
+
+                        <option value="">Loading completed events...</option>
+
+                    </select>
+
+                    <div id="createCatalogEventsMessage" class="form-text mt-2"></div>
+
+                </div>
+
+                <div class="mb-3 d-none" id="createCatalogLockedEventSection">
+
+                    <label class="form-label small fw-semibold" for="createCatalogLockedEventName">
+                        Selected Event
+                    </label>
+
+                    <input type="text"
+                           id="createCatalogLockedEventName"
+                           class="form-control"
+                           readonly>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label small fw-semibold">
+                        Album Name <span class="text-danger">*</span>
+                    </label>
+
+                    <input type="text"
+                           id="newCatalogName"
+                           class="form-control"
+                           placeholder="e.g. Morning Ceremony, Couple Session">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label small fw-semibold">
+                        Description
+                    </label>
+
+                    <textarea id="newCatalogDescription"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Optional album description..."></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                    id="submitCreateCatalogButton"
+                        onclick="submitCreateCatalog()">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Create Album
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM DELETE ALBUM MODAL
+========================================================== -->
+
+<div class="modal fade"
+     id="deleteCatalogModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold text-danger">
+
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Confirm Delete Album
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden"
+                       id="deleteCatalogId">
+
+                <p class="mb-2">
+
+                    Are you sure you want to delete album <strong id="deleteCatalogNameDisplay"></strong>?
+
+                </p>
+
+                <div class="alert alert-warning small mb-0">
+
+                    <i class="bi bi-info-circle me-1"></i>
+                    This action will permanently delete this album and remove all associated photos and image files.
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        onclick="confirmDeleteCatalog()">
+
+                    <i class="bi bi-trash me-1"></i>
+
+                    Delete Album
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+/* Use the group's existing HTTP session. Never rely on localStorage JWT. */
+    let photographerSession = null;
+    async function verifyPhotographerSession() {
+        try {
+            const response = await fetch('/api/auth/session', { credentials: 'same-origin', cache: 'no-store' });
+            const body = await response.json();
+            const user = body.data;
+            if (!response.ok || !body.status || !user ||
+                String(user.role || '').toUpperCase() !== 'SENIOR_PHOTOGRAPHER') {
+                window.location.replace('/login.html');
+                return;
+            }
+            photographerSession = user;
+            const first = user.firstName || '';
+            const last = user.lastName || '';
+            const name = [first, last].filter(Boolean).join(' ') || 'Photographer';
+            const initials = ((first[0] || '') + (last[0] || '')).toUpperCase() || 'SP';
+            document.getElementById('sidebarName').textContent = name;
+            document.getElementById('sidebarInitials').textContent = initials;
+            document.getElementById('sidebarRole').textContent = 'Senior Photographer';
+            await Promise.all([loadBookingEvents(), loadPhotographerProfile(), loadAllCatalogs()]);
+        } catch (error) {
+            window.location.replace('/login.html');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', verifyPhotographerSession);
+
+    async function logout() {
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'POST', credentials: 'same-origin'
+            });
+        } finally {
+            window.location.replace('/login.html');
+        }
+    }
+
+    /* =========================================================
+       BACKEND CONNECTION
+       Theme/layout are unchanged. Only JavaScript behavior is
+       connected to the Spring Boot backend.
+    ========================================================= */
+
+    /* =========================================================
+       BACKEND CONNECTION
+       Event Album & Photo Management
+    ========================================================= */
+
+    const API_BASE_URL = "/api/photos";
+    const API_CATALOG_URL = "/api/catalogs";
+    const API_BOOKING_URL = "/api/photographer/bookings";
+    const API_PROFILE_URL = "/api/profile";
+
+    let selectedBookingId = null;
+    let selectedEventName = null;
+
+    let selectedCatalogId = null;
+    let selectedCatalogName = null;
+
+    let showingAllCatalogs = true;
+    let eventCatalogs = [];
+    let availableBookingsForCatalog = [];
+    let validatedFiles = [];
+    let photos = [];
+
+
+    /* =========================================================
+       HELPER - AUTH HEADERS
+    ========================================================= */
+
+    // Escape database-controlled text before inserting it into HTML templates.
+    function htmlText(value) {
+        return String(value ?? '').replace(/[&<>"']/g, (c) => ({
+            '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+        })[c]);
+    }
+
+    function authHeaders() {
+        return { "Accept": "application/json" }; // session cookie is automatically sent on same-origin requests
+    }
+
+
+    async function loadAllCatalogs() {
+        showingAllCatalogs = true;
+
+        try {
+            const response = await fetch(API_CATALOG_URL, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            eventCatalogs = await response.json();
+        } catch (error) {
+            console.error(error);
+            eventCatalogs = [];
+        }
+
+        renderCatalogs();
+        populateUploadCatalogSelect();
+    }
+
+
+    async function loadPhotographerProfile() {
+        const message = document.getElementById("profileSaveMessage");
+
+        try {
+            const response = await fetch(API_PROFILE_URL, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            const profile = await response.json();
+            document.getElementById("profileFirstName").value = profile.firstName || "";
+            document.getElementById("profileLastName").value = profile.lastName || "";
+            document.getElementById("profileMobile").value = profile.mobile || "";
+            document.getElementById("profileEmail").value = profile.email || "";
+            document.getElementById("profileExperienceYears").value = profile.experienceYears ?? 0;
+            document.getElementById("profileBio").value = profile.bio || "";
+            if (message) message.classList.add("d-none");
+        } catch (error) {
+            showProfileMessage(message, error.message || "Unable to load your profile.", "danger");
+        }
+    }
+
+
+    async function savePhotographerProfile(event) {
+        event.preventDefault();
+
+        const message = document.getElementById("profileSaveMessage");
+        const button = document.getElementById("saveProfileButton");
+        button.disabled = true;
+
+        try {
+            const response = await fetch(API_PROFILE_URL, {
+                method: "PUT",
+                headers: {
+                    ...authHeaders(),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    firstName: document.getElementById("profileFirstName").value.trim(),
+                    lastName: document.getElementById("profileLastName").value.trim(),
+                    mobile: document.getElementById("profileMobile").value.trim(),
+                    experienceYears: Number(document.getElementById("profileExperienceYears").value),
+                    bio: document.getElementById("profileBio").value
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            const profile = await response.json();
+            document.getElementById("sidebarName").textContent = `${profile.firstName} ${profile.lastName}`.trim();
+            document.getElementById("sidebarInitials").textContent =
+                ((profile.firstName || "").charAt(0) + (profile.lastName || "").charAt(0)).toUpperCase() || "SP";
+            showProfileMessage(message, "Profile saved successfully.", "success");
+        } catch (error) {
+            showProfileMessage(message, error.message || "Unable to save your profile.", "danger");
+        } finally {
+            button.disabled = false;
+        }
+    }
+
+
+    function changePhotographerPassword() {
+        // The group login uses a different password system from the separate project.
+        // Keep the requested original UI, but do not claim to change a password.
+        document.getElementById('newProfilePassword').value = '';
+        document.getElementById('confirmProfilePassword').value = '';
+        document.getElementById('passwordChangeSuccess').classList.add('d-none');
+        showProfileMessage(document.getElementById('passwordChangeMessage'),
+            'Password changes are temporarily unavailable until the group login system supports them.',
+            'warning');
+    }
+
+
+    function toggleProfilePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const icon = button.querySelector("i");
+        const showPassword = input.type === "password";
+        input.type = showPassword ? "text" : "password";
+        icon.classList.toggle("bi-eye", !showPassword);
+        icon.classList.toggle("bi-eye-slash", showPassword);
+        button.title = showPassword ? "Hide password" : "Show password";
+        button.setAttribute("aria-label", button.title);
+    }
+
+
+    function showProfileMessage(element, text, type) {
+        if (!element) return;
+        element.textContent = text;
+        element.className = "alert alert-" + type + " mb-3";
+    }
+
+
+    async function loadBookingEvents() {
+        const container = document.getElementById("bookingEventsContainer");
+        const message = document.getElementById("bookingEventsMessage");
+        if (!container || !message) return;
+
+        try {
+            const response = await fetch(API_BOOKING_URL, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error("Bookings request failed with status " + response.status);
+            }
+
+            const bookings = await response.json();
+            container.replaceChildren();
+
+            if (!Array.isArray(bookings) || bookings.length === 0) {
+                message.textContent = "No any bookings";
+                return;
+            }
+
+            message.classList.add("d-none");
+            bookings.forEach(renderBookingEvent);
+        } catch (error) {
+            console.error(error);
+            message.textContent = "Unable to load bookings.";
+        }
+    }
+
+
+    function renderBookingEvent(booking) {
+        const container = document.getElementById("bookingEventsContainer");
+        if (!container) return;
+
+        const column = document.createElement("div");
+        column.className = "col-12 col-lg-4";
+
+        const card = document.createElement("div");
+        card.className = "event-card p-4 h-100 d-flex flex-column justify-content-between";
+
+        const details = document.createElement("div");
+        const bookingLabel = document.createElement("span");
+        bookingLabel.className = "badge badge-soft-primary mb-3";
+        bookingLabel.textContent = "Booking #" + booking.id;
+
+        const title = document.createElement("h5");
+        title.className = "fw-bold";
+        title.textContent = booking.eventTitle || "Untitled event";
+
+        const date = document.createElement("p");
+        date.className = "text-muted small mb-2";
+        const dateIcon = document.createElement("i");
+        dateIcon.className = "bi bi-calendar3 me-2";
+        date.append(dateIcon, formatBookingDate(booking.eventDate));
+
+        const location = document.createElement("p");
+        location.className = "text-muted small mb-2";
+        const locationIcon = document.createElement("i");
+        locationIcon.className = "bi bi-geo-alt me-2";
+        location.append(locationIcon, booking.eventLocation || "Location not provided");
+
+        const time = document.createElement("p");
+        time.className = "text-muted small mb-0";
+        const timeIcon = document.createElement("i");
+        timeIcon.className = "bi bi-clock me-2";
+        time.append(timeIcon, `${booking.startTime || ""} - ${booking.endTime || ""}`);
+
+        const selectButton = document.createElement("button");
+        selectButton.className = "btn btn-primary w-100 mt-3";
+        selectButton.type = "button";
+        selectButton.innerHTML = '<i class="bi bi-check-circle me-1"></i>Select Event';
+        selectButton.addEventListener("click", () => selectEvent(booking.id, booking.eventTitle));
+
+        details.append(bookingLabel, title, date, location, time);
+        card.append(details, selectButton);
+        column.append(card);
+        container.append(column);
+    }
+
+
+    function formatBookingDate(value) {
+        if (!value) return "Date not provided";
+
+        const date = new Date(value + "T00:00:00");
+        if (Number.isNaN(date.getTime())) return value;
+
+        return date.toLocaleDateString(undefined, {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+
+    /* =========================================================
+       HELPER - READ ERROR MESSAGE FROM BACKEND
+    ========================================================= */
+
+    async function getErrorMessage(response) {
+        if (response.status === 401 || response.status === 403) {
+            setTimeout(() => {
+                logout();
+            }, 2000);
+            return "Your login session has expired or is invalid. Redirecting to login page...";
+        }
+
+        try {
+            const body = await response.json();
+            return body.message || body.error || ("Request failed with status " + response.status);
+        } catch (error) {
+            return "Request failed with status " + response.status;
+        }
+    }
+
+
+    /* =========================================================
+       HELPER - CONVERT BACKEND PHOTO TO FRONTEND PHOTO OBJECT
+    ========================================================= */
+
+    function normalizePhoto(photo) {
+        const rawPath = String(photo.filePath || '').replace(/^\/+/, '');
+        const filePath = /^uploads\/event-photos\/[a-zA-Z0-9._-]+$/.test(rawPath)
+            ? '/' + rawPath : '';
+
+        return {
+            id: photo.id,
+            catalogId: photo.catalogId,
+            bookingId: photo.bookingId,
+            fileName: photo.fileName,
+            title: photo.title || photo.fileName.replace(/\.[^/.]+$/, ""),
+            description: photo.description || "",
+            fileType: photo.fileType || "",
+            fileSize: (photo.fileSizeKb || 0) * 1024,
+            imageUrl: filePath,
+            uploadedAt: photo.uploadedAt,
+            updatedAt: photo.updatedAt
+        };
+    }
+
+
+    /* =========================================================
+    SELECT EVENT & SHOW ITS ALBUM LIST
+    ========================================================= */
+
+    async function selectEvent(bookingId, eventName) {
+        bookingId = Number(bookingId);
+        if (!Number.isInteger(bookingId) || bookingId <= 0) {
+            alert("Invalid booking selected.");
+            return;
+        }
+
+        selectedBookingId = bookingId;
+        selectedEventName = eventName || ("Event #" + bookingId);
+        showingAllCatalogs = false;
+        selectedCatalogId = null;
+        selectedCatalogName = null;
+
+        const uploadSelectedEventEl = document.getElementById("uploadSelectedEvent");
+        if (uploadSelectedEventEl) uploadSelectedEventEl.innerText = selectedEventName;
+
+        // Reset section view to show albums list overview (hide inner album photos view if open)
+        document.getElementById("catalogPhotosSection").classList.add("d-none");
+        document.getElementById("eventCatalogsSection").classList.remove("d-none");
+
+        // 1. Transfer to Event Album tab
+        openTab("event-catalogs");
+
+        // Load this event's albums into the overview.
+        await loadCatalogsForSelectedEvent();
+
+        if (eventCatalogs.length > 0) {
+            const album = eventCatalogs[0];
+            await openCatalog(album.id, album.catalogName, album.description);
+        } else {
+            await openCreateCatalogModal(bookingId);
+        }
+    }
+
+    /* =========================================================
+       ALBUM MANAGEMENT (READ, CREATE, DELETE)
+    ========================================================= */
+
+    function populateUploadCatalogSelect() {
+        const select = document.getElementById("uploadCatalogSelect");
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Select an Album...</option>';
+        if (!eventCatalogs || eventCatalogs.length === 0) return;
+
+        eventCatalogs.forEach(cat => {
+            const opt = document.createElement("option");
+            opt.value = cat.id;
+            opt.textContent = cat.catalogName;
+            select.appendChild(opt);
+        });
+    }
+
+
+    async function loadCatalogsForSelectedEvent() {
+        if (!selectedBookingId) return;
+
+        showingAllCatalogs = false;
+
+        try {
+            const response = await fetch(API_CATALOG_URL + "/booking/" + selectedBookingId, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            eventCatalogs = await response.json();
+            renderCatalogs();
+            populateUploadCatalogSelect();
+        } catch (error) {
+            console.error(error);
+            eventCatalogs = [];
+            renderCatalogs();
+            populateUploadCatalogSelect();
+        }
+    }
+
+
+    function renderCatalogs() {
+        const container = document.getElementById("catalogsContainer");
+        const headerCreateButton = document.getElementById("createCatalogHeaderButton");
+        const hasCatalogs = Array.isArray(eventCatalogs) && eventCatalogs.length > 0;
+
+        if (headerCreateButton) {
+            headerCreateButton.classList.toggle("d-none", !hasCatalogs);
+        }
+
+        container.innerHTML = "";
+
+        if (!hasCatalogs) {
+            const emptyMessage = showingAllCatalogs
+                ? "No albums have been created yet."
+                : "This event does not have an album yet.";
+            container.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center py-5 border rounded bg-light">
+                        <i class="bi bi-folder2-open text-muted" style="font-size:45px;"></i>
+                        <h5 class="mt-3 fw-bold">No Albums Created Yet</h5>
+                        <p class="text-muted small">${emptyMessage}</p>
+                        <button class="btn btn-primary mt-3" onclick="openCreateCatalogModal()">
+                            <i class="bi bi-folder-plus me-1"></i> Create New Album
+                        </button>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        eventCatalogs.forEach(cat => {
+            const card = document.createElement("div");
+            card.className = "col-12 col-md-6 col-lg-4";
+            card.innerHTML = `
+                <div class="card border h-100 shadow-sm rounded-3">
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge badge-soft-primary">
+                                    <i class="bi bi-images me-1"></i> ${cat.photoCount || 0} Photos
+                                </span>
+                                <small class="text-muted" style="font-size:11px;">
+                                    ID: ALB-${cat.id}
+                                </small>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-2">${htmlText(cat.catalogName)}</h5>
+                            <p class="text-muted small mb-3">
+                                ${htmlText(cat.description || 'No description added.')}
+                            </p>
+                        </div>
+                        <div class="d-flex gap-2 pt-3 border-top">
+                            <button class="btn btn-sm btn-primary flex-fill" data-photographer-action="open">
+                                <i class="bi bi-folder2-open me-1"></i> Open Album
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete Album" data-photographer-action="delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            card.querySelector('[data-photographer-action="open"]').addEventListener('click',
+                () => openCatalog(cat.id, cat.catalogName, cat.description || ''));
+            card.querySelector('[data-photographer-action="delete"]').addEventListener('click',
+                () => openDeleteCatalogModal(cat.id, cat.catalogName));
+            container.appendChild(card);
+        });
+    }
+
+
+    async function openCreateCatalogModal(lockedBookingId = null) {
+        const lockSelection = lockedBookingId !== null && lockedBookingId !== undefined;
+        const preselectedBookingId = lockSelection ? Number(lockedBookingId) : selectedBookingId;
+        const dropdownSection = document.getElementById("createCatalogEventDropdownSection");
+        const lockedSection = document.getElementById("createCatalogLockedEventSection");
+        const bookingSelect = document.getElementById("createCatalogBookingSelect");
+        const message = document.getElementById("createCatalogEventsMessage");
+        const submitButton = document.getElementById("submitCreateCatalogButton");
+
+        dropdownSection.classList.toggle("d-none", lockSelection);
+        lockedSection.classList.toggle("d-none", !lockSelection);
+        document.getElementById("createCatalogLockedEventName").value = lockSelection
+            ? selectedEventName || "Event #" + preselectedBookingId
+            : "";
+        bookingSelect.innerHTML = '<option value="">Loading completed events...</option>';
+        bookingSelect.disabled = true;
+        submitButton.disabled = true;
+        message.textContent = "";
+        message.className = "form-text mt-2";
+        document.getElementById("newCatalogName").value = "";
+        document.getElementById("newCatalogDescription").value = "";
+
+        await loadAllCatalogs();
+
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById("createCatalogModal"));
+        modal.show();
+
+        await loadAvailableBookingsForCatalog(preselectedBookingId, lockSelection);
+    }
+
+
+    async function loadAvailableBookingsForCatalog(preselectedBookingId, lockSelection = false) {
+        const bookingSelect = document.getElementById("createCatalogBookingSelect");
+        const message = document.getElementById("createCatalogEventsMessage");
+
+        try {
+            const [bookingResponse, catalogResponse] = await Promise.all([
+                fetch(API_BOOKING_URL, { headers: authHeaders() }),
+                fetch(API_CATALOG_URL, { headers: authHeaders() })
+            ]);
+
+            if (!bookingResponse.ok) {
+                throw new Error(await getErrorMessage(bookingResponse));
+            }
+            if (!catalogResponse.ok) {
+                throw new Error(await getErrorMessage(catalogResponse));
+            }
+
+            const [bookings, catalogs] = await Promise.all([
+                bookingResponse.json(),
+                catalogResponse.json()
+            ]);
+            const bookingsWithAlbums = new Set(
+                catalogs.map(catalog => Number(catalog.bookingId))
+            );
+            availableBookingsForCatalog = bookings.filter(
+                booking => !bookingsWithAlbums.has(Number(booking.id))
+            );
+
+            bookingSelect.innerHTML = '<option value="">Select an event...</option>';
+            availableBookingsForCatalog.forEach(booking => {
+                const option = document.createElement("option");
+                option.value = booking.id;
+                option.textContent = `${booking.eventTitle} - ${formatBookingDate(booking.eventDate)}`;
+                bookingSelect.appendChild(option);
+            });
+
+            const preselectedBookingIsAvailable = preselectedBookingId
+                && availableBookingsForCatalog.some(
+                    booking => Number(booking.id) === Number(preselectedBookingId)
+                );
+            if (preselectedBookingIsAvailable) {
+                bookingSelect.value = String(preselectedBookingId);
+            }
+
+            bookingSelect.disabled = lockSelection || availableBookingsForCatalog.length === 0;
+            if (availableBookingsForCatalog.length === 0) {
+                message.textContent = "No completed events without an album are available.";
+                message.className = "form-text text-muted mt-2";
+            } else if (lockSelection && !preselectedBookingIsAvailable) {
+                message.textContent = "This event already has an album or is no longer available.";
+                message.className = "form-text text-danger mt-2";
+            }
+
+            updateCreateCatalogSelectionState();
+        } catch (error) {
+            console.error(error);
+            bookingSelect.innerHTML = '<option value="">Events could not be loaded</option>';
+            bookingSelect.disabled = true;
+            message.textContent = error.message || "Unable to load available events.";
+            message.className = "form-text text-danger mt-2";
+        }
+    }
+
+
+    function updateCreateCatalogSelectionState() {
+        const bookingSelect = document.getElementById("createCatalogBookingSelect");
+        document.getElementById("submitCreateCatalogButton").disabled = !bookingSelect.value;
+    }
+
+
+    async function submitCreateCatalog() {
+        const bookingId = Number(document.getElementById("createCatalogBookingSelect").value);
+        const catalogName = document.getElementById("newCatalogName").value.trim();
+        const description = document.getElementById("newCatalogDescription").value.trim();
+
+        if (!Number.isInteger(bookingId) || bookingId <= 0) {
+            alert("Please select an event.");
+            return;
+        }
+
+        if (!catalogName) {
+            alert("Album Name is required.");
+            return;
+        }
+
+        try {
+            const response = await fetch(API_CATALOG_URL, {
+                method: "POST",
+                headers: {
+                    ...authHeaders(),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    bookingId: bookingId,
+                    catalogName: catalogName,
+                    description: description
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            await response.json();
+            const selectedBooking = availableBookingsForCatalog.find(
+                booking => Number(booking.id) === bookingId
+            );
+            selectedBookingId = bookingId;
+            selectedEventName = selectedBooking ? selectedBooking.eventTitle : "Event #" + bookingId;
+
+            // Hide modal
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById("createCatalogModal"));
+            if (modalInstance) modalInstance.hide();
+
+            // Reload albums
+            await loadAllCatalogs();
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to create album: " + error.message);
+        }
+    }
+
+
+    function openDeleteCatalogModal(catalogId, catalogName) {
+        document.getElementById("deleteCatalogId").value = catalogId;
+        document.getElementById("deleteCatalogNameDisplay").innerText = catalogName;
+
+        const modal = new bootstrap.Modal(document.getElementById("deleteCatalogModal"));
+        modal.show();
+    }
+
+
+    async function confirmDeleteCatalog() {
+        const catalogId = Number(document.getElementById("deleteCatalogId").value);
+
+        try {
+            const response = await fetch(API_CATALOG_URL + "/" + catalogId, {
+                method: "DELETE",
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById("deleteCatalogModal")).hide();
+
+            if (selectedCatalogId === catalogId) {
+                await backToCatalogs();
+            } else if (showingAllCatalogs) {
+                await loadAllCatalogs();
+            } else {
+                await loadCatalogsForSelectedEvent();
+            }
+
+            alert("Album and associated photos deleted successfully.");
+        } catch (error) {
+            console.error(error);
+            alert("Delete album failed: " + error.message);
+        }
+    }
+
+
+    /* =========================================================
+       IN-ALBUM PHOTO MANAGEMENT
+    ========================================================= */
+
+    async function openCatalog(catalogId, catalogName, description) {
+        const catalog = eventCatalogs.find(item => Number(item.id) === Number(catalogId));
+        if (catalog) {
+            selectedBookingId = Number(catalog.bookingId);
+        }
+
+        selectedCatalogId = catalogId;
+        selectedCatalogName = catalogName;
+
+        document.getElementById("activeCatalogHeader").innerText = catalogName;
+        document.getElementById("activeCatalogDescription").innerText = description || "Manage and view photographs in this album.";
+
+        document.getElementById("eventCatalogsSection").classList.add("d-none");
+        document.getElementById("catalogPhotosSection").classList.remove("d-none");
+
+        populateUploadCatalogSelect();
+        const uploadSelect = document.getElementById("uploadCatalogSelect");
+        if (uploadSelect) uploadSelect.value = catalogId;
+
+        await loadPhotosForSelectedCatalog();
+    }
+
+
+    async function backToCatalogs() {
+        selectedCatalogId = null;
+        selectedCatalogName = null;
+
+        document.getElementById("catalogPhotosSection").classList.add("d-none");
+        document.getElementById("eventCatalogsSection").classList.remove("d-none");
+
+        await loadAllCatalogs();
+    }
+
+
+    async function loadPhotosForSelectedCatalog() {
+        if (!selectedCatalogId) {
+            photos = [];
+            renderPhotos();
+            return;
+        }
+
+        try {
+            const response = await fetch(API_BASE_URL + "/catalog/" + selectedCatalogId, {
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            const data = await response.json();
+            photos = data.map(normalizePhoto);
+            renderPhotos();
+        } catch (error) {
+            console.error(error);
+            photos = [];
+            renderPhotos();
+        }
+    }
+
+
+    /* =========================================================
+       NAVIGATION / TAB HELPERS
+    ========================================================= */
+
+    function openTab(tabId) {
+        const tabLink = document.querySelector('.sidebar a[href="#' + tabId + '"]');
+        if (tabLink) {
+            bootstrap.Tab.getOrCreateInstance(tabLink).show();
+        }
+    }
+
+
+    /* =========================================================
+       FILE SELECTION & VALIDATION
+    ========================================================= */
+
+    function openFileSelector() {
+        if (!selectedBookingId) {
+            alert("Please select an event first.");
+            openTab("select-event");
+            return;
+        }
+
+        if (!selectedCatalogId) {
+            alert("Please open an album before uploading photos.");
+            return;
+        }
+
+        document.getElementById("photoInput").click();
+    }
+
+    document.getElementById("photoInput").addEventListener("change", validatePhotos);
+
+    function validatePhotos() {
+        const files = Array.from(document.getElementById("photoInput").files);
+        const result = document.getElementById("validationResult");
+        result.innerHTML = "";
+        validatedFiles = [];
+
+        if (files.length === 0) return;
+
+        files.forEach(file => {
+            const allowedTypes = ["image/jpeg", "image/png"];
+            const maximumSize = 10 * 1024 * 1024;
+
+            const typeValid = allowedTypes.includes(file.type);
+            const sizeValid = file.size <= maximumSize;
+            const valid = typeValid && sizeValid;
+
+            if (valid) {
+                validatedFiles.push(file);
+            }
+
+            const row = document.createElement("div");
+            row.className = "border rounded p-3 mb-2 d-flex justify-content-between align-items-center bg-white";
+
+            let reason = "";
+            if (!typeValid) reason = "Invalid file type";
+            else if (!sizeValid) reason = "File exceeds 10 MB";
+
+            row.innerHTML = `
+                <div>
+                    <i class="bi bi-image me-2 text-primary"></i>
+                    <strong>${file.name}</strong>
+                    <div class="small text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                </div>
+                ${valid
+                    ? `<span class="badge badge-soft-success">Valid</span>`
+                    : `<span class="badge badge-soft-danger">${reason}</span>`
+                }
+            `;
+            result.appendChild(row);
+        });
+    }
+
+    function clearSelectedPhotos() {
+        document.getElementById("photoInput").value = "";
+        document.getElementById("validationResult").innerHTML = "";
+        validatedFiles = [];
+    }
+
+
+    /* =========================================================
+       UPLOAD PHOTOS DIRECTLY TO IN-ALBUM
+    ========================================================= */
+
+    async function uploadPhotos() {
+        if (!selectedBookingId) {
+            alert("Please select an event first.");
+            return;
+        }
+
+        if (!selectedCatalogId) {
+            alert("Please open an album before uploading photos.");
+            return;
+        }
+
+        if (validatedFiles.length === 0) {
+            alert("Please select valid photos to upload.");
+            return;
+        }
+
+        const uploadButton = document.querySelector('#catalogUploadCollapse button[onclick="uploadPhotos()"]');
+        if (uploadButton) uploadButton.disabled = true;
+
+        let successCount = 0;
+
+        try {
+            for (const file of validatedFiles) {
+                const formData = new FormData();
+                formData.append("catalogId", selectedCatalogId);
+                formData.append("file", file);
+                formData.append("title", file.name.replace(/\.[^/.]+$/, ""));
+                formData.append("description", "");
+
+                const response = await fetch(API_BASE_URL + "/upload", {
+                    method: "POST",
+                    headers: authHeaders(),
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(await getErrorMessage(response));
+                }
+                successCount++;
+            }
+
+            alert(successCount + " photo(s) uploaded successfully into this album.");
+            clearSelectedPhotos();
+
+            // Collapse upload area
+            const uploadCollapse = document.getElementById("catalogUploadCollapse");
+            if (uploadCollapse) {
+                const bsCollapse = bootstrap.Collapse.getInstance(uploadCollapse);
+                if (bsCollapse) bsCollapse.hide();
+            }
+
+            // Reload album photos & album counts
+            await loadPhotosForSelectedCatalog();
+            await loadCatalogsForSelectedEvent();
+
+        } catch (error) {
+            console.error(error);
+            alert("Upload failed: " + error.message);
+        } finally {
+            if (uploadButton) uploadButton.disabled = false;
+        }
+    }
+
+
+    /* =========================================================
+       RENDER GALLERY & FILTERING
+    ========================================================= */
+
+    function renderPhotos() {
+        const gallery = document.getElementById("photoGallery");
+        const count = document.getElementById("photoCount");
+        if (!gallery || !count) return;
+
+        gallery.innerHTML = "";
+
+        if (!selectedCatalogId) {
+            gallery.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-folder-x text-muted" style="font-size:50px;"></i>
+                        <h5 class="mt-3 fw-bold">No Album Selected</h5>
+                        <p class="text-muted">Select an album to view its photographs.</p>
+                    </div>
+                </div>
+            `;
+            count.innerText = "0 Photos";
+            return;
+        }
+
+        const searchTerm = document.getElementById("photoSearch").value.trim().toLowerCase();
+
+        let filteredPhotos = [...photos];
+
+        if (searchTerm !== "") {
+            filteredPhotos = filteredPhotos.filter(photo =>
+                photo.title.toLowerCase().includes(searchTerm)
+                || photo.fileName.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        count.innerText = filteredPhotos.length + (filteredPhotos.length === 1 ? " Photo" : " Photos");
+
+        if (filteredPhotos.length === 0) {
+            gallery.innerHTML = `
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-images text-muted" style="font-size:50px;"></i>
+                        <h5 class="mt-3 fw-bold">No Photos Found</h5>
+                        <p class="text-muted">Upload photos to this album or change your filter criteria.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        filteredPhotos.forEach(photo => {
+            gallery.innerHTML += `
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+                    <div class="photo-card h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="photo-preview">
+                                <img src="${htmlText(photo.imageUrl)}" alt="${htmlText(photo.title)}">
+                            </div>
+                            <div class="p-3">
+                                <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+                                    <h6 class="fw-bold mb-0">${htmlText(photo.title)}</h6>
+                                </div>
+                                <p class="text-muted small mb-2">${htmlText(photo.fileName)}</p>
+                            </div>
+                        </div>
+                        <div class="p-3 pt-0">
+                            <div class="d-flex gap-2 border-top pt-2">
+                                <button class="btn btn-sm btn-light border flex-fill" title="View Photo" onclick="viewPhoto(${photo.id})">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-light border flex-fill" title="Edit Details" onclick="editPhoto(${photo.id})">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger flex-fill" title="Delete Photo" onclick="openDeleteModal(${photo.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+
+    /* =========================================================
+       PHOTO MODAL ACTIONS (VIEW, EDIT, DELETE)
+    ========================================================= */
+
+    function viewPhoto(photoId) {
+        const photo = photos.find(p => p.id === photoId);
+        if (!photo) return;
+
+        document.getElementById("viewPhotoImage").src = photo.imageUrl;
+        document.getElementById("viewPhotoTitle").innerText = photo.title;
+        document.getElementById("viewPhotoFileName").innerText = photo.fileName;
+        document.getElementById("viewPhotoType").innerText = photo.fileType;
+        document.getElementById("viewPhotoSize").innerText = (photo.fileSize / 1024 / 1024).toFixed(2) + " MB";
+        document.getElementById("viewPhotoDescription").innerText = photo.description || "No description";
+
+        const modal = new bootstrap.Modal(document.getElementById("viewPhotoModal"));
+        modal.show();
+    }
+
+
+    function editPhoto(photoId) {
+        const photo = photos.find(p => p.id === photoId);
+        if (!photo) return;
+
+        document.getElementById("editPhotoId").value = photo.id;
+        document.getElementById("editPhotoTitle").value = photo.title;
+        document.getElementById("editPhotoDescription").value = photo.description;
+
+        const modal = new bootstrap.Modal(document.getElementById("editPhotoModal"));
+        modal.show();
+    }
+
+
+    async function updatePhotoDetails() {
+        const photoId = Number(document.getElementById("editPhotoId").value);
+        const title = document.getElementById("editPhotoTitle").value.trim();
+
+        if (title === "") {
+            alert("Photo title cannot be empty.");
+            return;
+        }
+
+        const description = document.getElementById("editPhotoDescription").value.trim();
+
+        try {
+            const response = await fetch(API_BASE_URL + "/" + photoId, {
+                method: "PUT",
+                headers: {
+                    ...authHeaders(),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById("editPhotoModal")).hide();
+            await loadPhotosForSelectedCatalog();
+            alert("Photo details updated successfully.");
+
+        } catch (error) {
+            console.error(error);
+            alert("Update failed: " + error.message);
+        }
+    }
+
+
+    function openDeleteModal(photoId) {
+        document.getElementById("deletePhotoId").value = photoId;
+        const modal = new bootstrap.Modal(document.getElementById("deletePhotoModal"));
+        modal.show();
+    }
+
+
+    async function confirmDeletePhoto() {
+        const photoId = Number(document.getElementById("deletePhotoId").value);
+
+        try {
+            const response = await fetch(API_BASE_URL + "/" + photoId, {
+                method: "DELETE",
+                headers: authHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById("deletePhotoModal")).hide();
+
+            await loadPhotosForSelectedCatalog();
+            await loadCatalogsForSelectedEvent();
+
+            alert("Photo deleted successfully.");
+
+        } catch (error) {
+            console.error(error);
+            alert("Delete failed: " + error.message);
+        }
+    }
+
+
+    function resetFilters() {
+        document.getElementById("photoSearch").value = "";
+        renderPhotos();
+    }
+</script>
+
+</body>
+</html>
