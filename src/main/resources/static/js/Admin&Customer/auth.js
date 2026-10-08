@@ -37,6 +37,7 @@ function getDashboardForRole(role) {
         case 'PHOTOGRAPHER':
         case 'LEAD_PHOTOGRAPHER':
         case 'SENIOR_PHOTOGRAPHER':
+        case 'SENIOREVENTPHOTOGRAPHER':
             return 'photographer.html';
 
         case 'EQUIPMENT_MANAGER':
