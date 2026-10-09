@@ -4,7 +4,10 @@ import com.event.snappro.SnapPro.dto.BookingRequestDTO;
 import com.event.snappro.SnapPro.dto.ResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.time.LocalDate;
+
 public interface BookingService {
     ResponseDTO createBooking(BookingRequestDTO requestDTO, HttpServletRequest request);
     ResponseDTO getCustomerBookings(HttpServletRequest request);
+    ResponseDTO getBookedSlots(LocalDate date);
 }

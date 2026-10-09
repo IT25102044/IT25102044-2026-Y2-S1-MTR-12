@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SnapPro - Customer Portal</title>
+  <title>SnapPro - Premier Event Photography Management</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
     :root {
-      --primary-accent: #3b82f6;
+      --primary-accent: #2563eb;
+      --primary-dark: #1d4ed8;
       --primary-soft: #eff6ff;
-      --dark-text: #1e293b;
+      --accent-cyan: #06b6d4;
+      --dark-text: #0f172a;
       --muted-text: #64748b;
       --surface-card: #ffffff;
       --border-subtle: #e2e8f0;
@@ -22,23 +28,48 @@
     body {
       background-color: var(--body-bg);
       color: var(--dark-text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Sidebar Navigation */
+    /* Fixed Left Sidebar Navigation */
     .sidebar {
-      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
       background-color: var(--surface-card);
       border-right: 1px solid var(--border-subtle);
       transition: all 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .brand-logo {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .nav-link {
       color: var(--muted-text);
-      font-weight: 500;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.25rem;
+      font-weight: 600;
+      padding: 0.75rem 1.15rem;
+      border-radius: 0.65rem;
+      margin-bottom: 0.35rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
     }
 
     .nav-link:hover, .nav-link.active {
@@ -46,33 +77,206 @@
       background-color: var(--primary-soft);
     }
 
-    /* Custom Cards */
+    /* Hero Banner */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(135deg, #0b1329 0%, #111827 50%, #1e1b4b 100%);
+      border-radius: 24px;
+      color: #ffffff;
+      overflow: hidden;
+      padding: 4rem 2.5rem;
+      box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-pattern {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-glow-1 {
+      position: absolute;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.38) 0%, rgba(0, 0, 0, 0) 70%);
+      top: -120px; right: -60px;
+      border-radius: 50%;
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+      bottom: -80px; left: 10%;
+      border-radius: 50%;
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #93c5fd;
+    }
+
+    /* Quick Metrics & Custom Cards */
     .stat-card {
       background: var(--surface-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Feature & Specialty Cards */
+    .specialty-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .specialty-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 36px -10px rgba(15, 23, 42, 0.12);
+      border-color: #93c5fd;
+    }
+
+    .specialty-card-img-wrap {
+      position: relative;
+      height: 210px;
+      overflow: hidden;
+      background-color: #0f172a;
+    }
+
+    .specialty-card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .specialty-card:hover .specialty-card-img-wrap img {
+      transform: scale(1.08);
+    }
+
+    .specialty-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .why-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 1.85rem;
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .why-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px -8px rgba(0, 0, 0, 0.08);
+      border-color: #bfdbfe;
+    }
+
+    .why-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-pill {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      border: 2px solid #bfdbfe;
+    }
+
+    .testimonial-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 1.85rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.07);
     }
 
     .package-card {
       background: var(--surface-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 14px;
+      border-radius: 18px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       height: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .package-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px -8px rgba(37, 99, 235, 0.12);
+      border-color: #93c5fd;
     }
 
     .package-card.featured {
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25), 0 12px 24px -6px rgba(37, 99, 235, 0.15);
+      background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
     }
 
     .badge-soft-warning {
@@ -100,10 +304,117 @@
     }
 
     .gallery-img {
-      height: 180px;
+      height: 200px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
       width: 100%;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-img:hover {
+      transform: scale(1.03);
+    }
+
+    .cta-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0284c7 100%);
+      border-radius: 20px;
+      color: #ffffff;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 16px 36px -10px rgba(37, 99, 235, 0.35);
+    }
+
+    /* Booking Status Tracker & Progress Bar */
+    .status-tracker-container {
+      background: #f8fafc;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .step-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+      border: 2px solid #cbd5e1;
+      background-color: #ffffff;
+      color: #94a3b8;
+    }
+
+    .step-node.completed .step-icon-wrap {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+    }
+
+    .step-node.active-pending .step-icon-wrap {
+      background-color: #f59e0b;
+      border-color: #f59e0b;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.22);
+      animation: pulse-warning 2s infinite;
+    }
+
+    .step-node.active-confirmed .step-icon-wrap {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.22);
+      animation: pulse-success 2s infinite;
+    }
+
+    .step-node.active-completed .step-icon-wrap {
+      background-color: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.22);
+    }
+
+    .step-node.cancelled .step-icon-wrap {
+      background-color: #ef4444;
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
+
+    .step-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    @keyframes pulse-warning {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    @keyframes pulse-success {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
   </style>
 </head>
@@ -111,74 +422,118 @@
 
 <div class="container-fluid">
   <div class="row">
-    <!-- Desktop Sidebar -->
-    <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4 sticky-top">
-      <div class="d-flex align-items-center mb-4 px-2">
-        <i class="bi bi-camera-reels-fill text-primary fs-3 me-2"></i>
-        <h5 class="mb-0 fw-bold tracking-tight">SnapPro</h5>
-      </div>
-      <ul class="nav flex-column mb-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
-            <i class="bi bi-grid-1x2 me-2"></i> Overview
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#bookings" data-bs-toggle="tab">
-            <i class="bi bi-calendar-event me-2"></i> My Bookings
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#packages" data-bs-toggle="tab">
-            <i class="bi bi-bag-check me-2"></i> Service Packages
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#gallery" data-bs-toggle="tab">
-            <i class="bi bi-images me-2"></i> Event Photos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#feedback" data-bs-toggle="tab">
-            <i class="bi bi-chat-left-quote me-2"></i> Reviews & Feedback
-          </a>
-        </li>
-      </ul>
-      <hr class="text-secondary opacity-25 my-4" />
-      <div class="px-2">
-        <div class="d-flex align-items-center mb-3">
-          <div id="customerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 38px; height: 38px; font-size: 14px; font-weight: 600;">
-            AL
+    <!-- Desktop Fixed Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4">
+      <div>
+        <div class="d-flex align-items-center mb-4 px-2 cursor-pointer" onclick="switchTab('dashboard')">
+          <div class="bg-primary text-white p-2 rounded-3 me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+            <i class="bi bi-camera-reels-fill fs-5"></i>
           </div>
-          <div class="overflow-hidden">
-            <p id="customerName" class="mb-0 fw-semibold text-truncate" style="font-size: 14px;">Amanda Lewis</p>
-            <span id="customerEmail" class="text-muted" style="font-size: 12px;">Customer</span>
+          <div>
+            <h5 class="mb-0 fw-bold tracking-tight brand-logo">SnapPro</h5>
+            <small class="text-muted fw-semibold" style="font-size: 10px; letter-spacing: 0.5px;">STUDIO & EVENTS</small>
           </div>
         </div>
-        <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="signOut()">
-          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
-        </button>
+
+        <ul class="nav flex-column mb-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab" id="navLinkDashboard">
+              <i class="bi bi-grid-1x2 me-2"></i> Overview
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#packages" data-bs-toggle="tab" id="navLinkPackages">
+              <i class="bi bi-bag-check me-2"></i> Service Packages
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#bookings" data-bs-toggle="tab" id="navLinkBookings" onclick="handleBookingsNavClick(event)">
+              <i class="bi bi-calendar-event me-2"></i> My Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#gallery" data-bs-toggle="tab" id="navLinkGallery">
+              <i class="bi bi-images me-2"></i> Event Photos
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#feedback" data-bs-toggle="tab" id="navLinkFeedback">
+              <i class="bi bi-chat-left-quote me-2"></i> Reviews & Feedback
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="pt-3">
+        <hr class="text-secondary opacity-25 my-3" />
+
+        <!-- Logged-in User Profile Container -->
+        <div class="px-2" id="sidebarLoggedInUser" style="display: none;">
+          <div class="d-flex align-items-center mb-3">
+            <div id="customerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2 shadow-sm" style="width: 40px; height: 40px; font-size: 14px; font-weight: 700;">
+              CU
+            </div>
+            <div class="overflow-hidden">
+              <p id="customerName" class="mb-0 fw-bold text-truncate" style="font-size: 14px;">Customer</p>
+              <span id="customerEmail" class="text-muted text-truncate d-block" style="font-size: 12px;">customer@snappro.com</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center fw-semibold" onclick="signOut()">
+            <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+          </button>
+        </div>
+
+        <!-- Guest User Container -->
+        <div class="px-2" id="sidebarGuestUser">
+          <div class="p-3 bg-light rounded-3 border mb-3 text-center">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-2" style="width: 44px; height: 44px;">
+              <i class="bi bi-person-fill fs-4"></i>
+            </div>
+            <h6 class="mb-1 fw-bold">Guest Visitor</h6>
+            <p class="text-muted small mb-0" style="font-size: 11px;">Sign in to book shoots & view bookings</p>
+          </div>
+          <div class="d-grid gap-2">
+            <a href="login.html" class="btn btn-primary btn-sm fw-semibold d-flex align-items-center justify-content-center">
+              <i class="bi bi-box-arrow-in-right me-2"></i> Sign In
+            </a>
+            <a href="register.html" class="btn btn-outline-primary btn-sm fw-semibold d-flex align-items-center justify-content-center">
+              <i class="bi bi-person-plus me-2"></i> Create Account
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
 
     <!-- Mobile Top Navigation Bar -->
-    <nav class="navbar d-md-none bg-white border-bottom px-3 py-2 sticky-top">
-      <div class="d-flex align-items-center">
-        <i class="bi bi-camera-reels-fill text-primary fs-4 me-2"></i>
-        <span class="fw-bold fs-5">SnapPro</span>
+    <nav class="navbar d-md-none bg-white border-bottom px-3 py-2 sticky-top shadow-sm">
+      <div class="d-flex align-items-center cursor-pointer" onclick="switchTab('dashboard')">
+        <div class="bg-primary text-white p-1 rounded-2 me-2 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+          <i class="bi bi-camera-reels-fill fs-6"></i>
+        </div>
+        <span class="fw-bold fs-5 brand-logo">SnapPro</span>
       </div>
-      <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-        <i class="bi bi-list fs-5"></i>
-      </button>
+      <div class="d-flex align-items-center gap-2">
+        <div id="mobileQuickAuth" class="d-none d-sm-block">
+          <a href="login.html" class="btn btn-sm btn-outline-primary fw-semibold" id="mobileQuickLoginBtn">Sign In</a>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+      </div>
     </nav>
 
     <!-- Mobile Offcanvas Menu -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileMenu">
       <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title fw-bold">SnapPro Menu</h5>
-        <button type="button" class="btn-close" data-bs-target="#mobileMenu" data-bs-dismiss="offcanvas"></button>
+        <div class="d-flex align-items-center">
+          <div class="bg-primary text-white p-1 rounded-2 me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="bi bi-camera-reels-fill fs-6"></i>
+          </div>
+          <h5 class="offcanvas-title fw-bold brand-logo">SnapPro</h5>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
       </div>
-      <div class="offcanvas-body">
+      <div class="offcanvas-body d-flex flex-column justify-content-between">
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link active" href="#dashboard" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
@@ -186,13 +541,13 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#bookings" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
-              <i class="bi bi-calendar-event me-2"></i> My Bookings
+            <a class="nav-link" href="#packages" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
+              <i class="bi bi-bag-check me-2"></i> Service Packages
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#packages" data-bs-toggle="tab" data-bs-dismiss="offcanvas">
-              <i class="bi bi-bag-check me-2"></i> Service Packages
+            <a class="nav-link" href="#bookings" data-bs-toggle="tab" onclick="handleBookingsNavClick(event)" data-bs-dismiss="offcanvas">
+              <i class="bi bi-calendar-event me-2"></i> My Bookings
             </a>
           </li>
           <li class="nav-item">
@@ -206,19 +561,37 @@
             </a>
           </li>
         </ul>
-        <hr class="text-secondary opacity-25 my-3" />
-        <div class="d-flex align-items-center mb-3">
-          <div id="mobileCustomerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 38px; height: 38px; font-size: 14px; font-weight: 600;">
-            AL
+
+        <div class="mt-4">
+          <hr class="text-secondary opacity-25 my-3" />
+          <!-- Mobile Logged In User Profile -->
+          <div id="mobileLoggedInUser" style="display: none;">
+            <div class="d-flex align-items-center mb-3">
+              <div id="mobileCustomerInitials" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 38px; height: 38px; font-size: 14px; font-weight: 700;">
+                CU
+              </div>
+              <div class="overflow-hidden">
+                <p id="mobileCustomerName" class="mb-0 fw-semibold text-truncate" style="font-size: 14px;">Customer</p>
+                <span class="text-muted" style="font-size: 12px;">Customer Portal</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="signOut()">
+              <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+            </button>
           </div>
-          <div class="overflow-hidden">
-            <p id="mobileCustomerName" class="mb-0 fw-semibold text-truncate" style="font-size: 14px;">Amanda Lewis</p>
-            <span class="text-muted" style="font-size: 12px;">Customer</span>
+
+          <!-- Mobile Guest User Profile -->
+          <div id="mobileGuestUser">
+            <div class="p-3 bg-light rounded-3 border mb-3 text-center">
+              <h6 class="mb-1 fw-bold">Welcome Guest!</h6>
+              <p class="text-muted small mb-0">Sign in to book photography & access bookings</p>
+            </div>
+            <div class="d-grid gap-2">
+              <a href="login.html" class="btn btn-primary btn-sm fw-semibold">Sign In</a>
+              <a href="register.html" class="btn btn-outline-primary btn-sm fw-semibold">Create Account</a>
+            </div>
           </div>
         </div>
-        <button type="button" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center" onclick="signOut()">
-          <i class="bi bi-box-arrow-right me-2"></i> Sign Out
-        </button>
       </div>
     </div>
 
@@ -226,128 +599,501 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
       <div class="tab-content">
 
-        <!-- TAB 1: OVERVIEW & DASHBOARD -->
+        <!-- TAB 1: OVERVIEW & HOME PAGE -->
         <div class="tab-pane fade show active" id="dashboard">
-          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-            <div>
-              <h3 id="welcomeCustomerName" class="fw-bold mb-1">Welcome back, Amanda! 👋</h3>
-              <p class="text-muted mb-0">Track your photography appointments, manage photo galleries, and book new shoots.</p>
-            </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newBookingModal">
-              <i class="bi bi-plus-circle me-1"></i> Book Photography
-            </button>
-          </div>
+          
+          <!-- 1. CREATIVE HOME HERO BANNER -->
+          <div class="hero-section mb-5 position-relative">
+            <div class="hero-pattern"></div>
+            <div class="hero-glow-1"></div>
+            <div class="hero-glow-2"></div>
 
-          <!-- Quick Metrics -->
-          <div class="row g-3 mb-4">
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="stat-card p-3 d-flex align-items-center">
-                <div class="bg-primary-subtle text-primary p-3 rounded-circle me-3">
-                  <i class="bi bi-camera fs-4"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Active Shoots</h6>
-                  <h4 class="mb-0 fw-bold">1</h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="stat-card p-3 d-flex align-items-center">
-                <div class="bg-warning-subtle text-warning p-3 rounded-circle me-3">
-                  <i class="bi bi-clock-history fs-4"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Pending Approval</h6>
-                  <h4 class="mb-0 fw-bold">1</h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="stat-card p-3 d-flex align-items-center">
-                <div class="bg-success-subtle text-success p-3 rounded-circle me-3">
-                  <i class="bi bi-check2-circle fs-4"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Completed Events</h6>
-                  <h4 class="mb-0 fw-bold">3</h4>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3">
-              <div class="stat-card p-3 d-flex align-items-center">
-                <div class="bg-info-subtle text-info p-3 rounded-circle me-3">
-                  <i class="bi bi-cloud-arrow-down fs-4"></i>
-                </div>
-                <div>
-                  <h6 class="text-muted mb-1 text-uppercase" style="font-size: 11px;">Ready Galleries</h6>
-                  <h4 class="mb-0 fw-bold">2</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Next Upcoming Event & Action Banner -->
-          <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
-            <div class="card-body p-4">
-              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div>
-                  <span class="badge badge-soft-primary mb-2">Upcoming Confirmed Event</span>
-                  <h4 class="fw-bold mb-1">Corporate Annual Gala 2026</h4>
-                  <p class="text-muted mb-2">
-                    <i class="bi bi-geo-alt me-1"></i> Grand Ballroom, Hilton Colombo &nbsp;|&nbsp; 
-                    <i class="bi bi-calendar3 me-1"></i> Oct 24, 2026 &nbsp;|&nbsp; 
-                    <i class="bi bi-clock me-1"></i> 05:00 PM - 10:00 PM
+            <div class="position-relative z-1">
+              <div class="row align-items-center g-4">
+                <div class="col-12 col-lg-8">
+                  <div class="hero-tag mb-3">
+                    <i class="bi bi-stars text-warning"></i>
+                    <span>Premier Event Photography & Cinematography</span>
+                  </div>
+                  <h1 class="display-5 fw-extrabold mb-3 tracking-tight text-white" style="font-weight: 800; line-height: 1.2;">
+                    Preserving Life's Most <span style="background: linear-gradient(135deg, #60a5fa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Unforgettable Moments.</span>
+                  </h1>
+                  <p class="lead text-light opacity-90 mb-4" style="max-width: 620px; font-size: 1.05rem; font-weight: 400; line-height: 1.6;">
+                    From luxury weddings and corporate galas to vibrant music concerts and private celebrations — SnapPro delivers magazine-grade visual storytelling with Sri Lanka's finest senior photographers.
                   </p>
-                  <p class="small text-muted mb-0">Assigned Photographer: <strong>Ruwan Silva (Senior Event Specialist)</strong></p>
+                  
+                  <!-- Hero Action Buttons -->
+                  <div class="d-flex flex-wrap gap-3">
+                    <button class="btn btn-primary btn-lg px-4 py-2 fw-bold shadow-sm d-flex align-items-center" onclick="switchTab('packages')">
+                      <i class="bi bi-bag-check-fill me-2"></i> Explore Packages
+                    </button>
+                    <button class="btn btn-light btn-lg px-4 py-2 fw-bold shadow-sm d-flex align-items-center border-0 text-dark" onclick="openCustomBookingModal()">
+                      <i class="bi bi-stars text-primary me-2"></i> Custom Booking Request
+                    </button>
+                    <button class="btn btn-outline-light btn-lg px-4 py-2 fw-semibold d-flex align-items-center" onclick="switchTab('gallery')">
+                      <i class="bi bi-images me-2"></i> View Portfolio
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <a href="#gallery" data-bs-toggle="tab" class="btn btn-outline-primary btn-sm">View Details</a>
+
+                <div class="col-12 col-lg-4 text-center d-none d-lg-block">
+                  <div class="p-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-20 backdrop-blur" style="backdrop-filter: blur(12px);">
+                    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=600&q=80" alt="Camera Lens" class="img-fluid rounded-3 mb-3 shadow" style="height: 180px; width: 100%; object-fit: cover;" />
+                    <div class="d-flex justify-content-around text-start px-2">
+                      <div>
+                        <div class="fw-bold text-white fs-5">500+</div>
+                        <small class="text-light opacity-75" style="font-size: 11px;">Events Covered</small>
+                      </div>
+                      <div class="border-start border-white border-opacity-25 ps-3">
+                        <div class="fw-bold text-warning fs-5">4.9 ★</div>
+                        <small class="text-light opacity-75" style="font-size: 11px;">Client Rating</small>
+                      </div>
+                      <div class="border-start border-white border-opacity-25 ps-3">
+                        <div class="fw-bold text-info fs-5">48h</div>
+                        <small class="text-light opacity-75" style="font-size: 11px;">Preview Delivery</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Highlights Ribbon -->
+              <div class="row g-3 mt-4 pt-3 border-top border-white border-opacity-15">
+                <div class="col-6 col-md-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill text-success fs-4 me-2"></i>
+                    <div>
+                      <strong class="d-block text-white" style="font-size: 13px;">Verified Master Crew</strong>
+                      <span class="text-light opacity-75" style="font-size: 11px;">Top 5% Photographers</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-lightning-charge-fill text-warning fs-4 me-2"></i>
+                    <div>
+                      <strong class="d-block text-white" style="font-size: 13px;">48-Hour Highlights</strong>
+                      <span class="text-light opacity-75" style="font-size: 11px;">Social-Ready Previews</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-cloud-arrow-down-fill text-info fs-4 me-2"></i>
+                    <div>
+                      <strong class="d-block text-white" style="font-size: 13px;">Cloud Gallery Access</strong>
+                      <span class="text-light opacity-75" style="font-size: 11px;">High-Res Direct Downloads</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-check-fill text-primary fs-4 me-2"></i>
+                    <div>
+                      <strong class="d-block text-white" style="font-size: 13px;">Transparent Pricing</strong>
+                      <span class="text-light opacity-75" style="font-size: 11px;">Zero Hidden Fees</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 2. PERSONALIZED LOGGED-IN CUSTOMER HUB (Shown dynamically when logged in) -->
+          <div id="customerPersonalHub" class="mb-5" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 pb-2 border-bottom">
+              <div>
+                <h4 id="welcomeCustomerName" class="fw-bold mb-1">Welcome back, Valued Customer! 👋</h4>
+                <p class="text-muted mb-0 small">Here is a live summary of your active shoots, booking statuses, and downloadable photo galleries.</p>
+              </div>
+              <div>
+                <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="switchTab('bookings')">
+                  <i class="bi bi-list-ul me-1"></i> View Full Bookings History
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Metrics -->
+            <div class="row g-3 mb-4">
+              <div class="col-6 col-xl-3">
+                <div class="stat-card p-3 d-flex align-items-center">
+                  <div class="bg-primary-subtle text-primary p-3 rounded-3 me-3">
+                    <i class="bi bi-camera fs-4"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size: 11px;">Active Shoots</h6>
+                    <h3 class="mb-0 fw-bold" id="metricActiveShoots">0</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-xl-3">
+                <div class="stat-card p-3 d-flex align-items-center">
+                  <div class="bg-warning-subtle text-warning p-3 rounded-3 me-3">
+                    <i class="bi bi-clock-history fs-4"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size: 11px;">Pending Approval</h6>
+                    <h3 class="mb-0 fw-bold" id="metricPendingShoots">0</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-xl-3">
+                <div class="stat-card p-3 d-flex align-items-center">
+                  <div class="bg-success-subtle text-success p-3 rounded-3 me-3">
+                    <i class="bi bi-check2-circle fs-4"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size: 11px;">Completed Events</h6>
+                    <h3 class="mb-0 fw-bold" id="metricCompletedShoots">0</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 col-xl-3">
+                <div class="stat-card p-3 d-flex align-items-center">
+                  <div class="bg-info-subtle text-info p-3 rounded-3 me-3">
+                    <i class="bi bi-cloud-arrow-down fs-4"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1 text-uppercase fw-semibold" style="font-size: 11px;">Ready Galleries</h6>
+                    <h3 class="mb-0 fw-bold">2</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Bookings Quick View Table -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+              <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>Recent Bookings Summary</h5>
+                <button class="btn btn-sm btn-link text-primary text-decoration-none fw-semibold" onclick="switchTab('bookings')">View All →</button>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-middle table-hover mb-0">
+                  <thead class="table-light">
+                    <tr style="font-size: 12px;">
+                      <th>BOOKING ID</th>
+                      <th>EVENT TITLE</th>
+                      <th>PACKAGE</th>
+                      <th>EVENT DATE</th>
+                      <th>TOTAL (LKR)</th>
+                      <th>STATUS</th>
+                      <th class="text-end">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardRecentTable">
+                    <tr>
+                      <td colspan="7" class="text-center text-muted py-4">Loading recent bookings...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. FEATURED PHOTOGRAPHY SPECIALIZATIONS SHOWCASE -->
+          <div class="mb-5">
+            <div class="text-center mb-4">
+              <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 rounded-pill text-uppercase" style="font-size: 11px;">Our Expertise</span>
+              <h2 class="fw-bold mt-2 mb-2">Tailored Photography for Every Occasion</h2>
+              <p class="text-muted" style="max-width: 600px; margin: 0 auto;">Discover specialized photography setups meticulously crafted to preserve the emotions, details, and grandeur of your events.</p>
+            </div>
+
+            <div class="row g-4">
+              <!-- Specialty 1: Weddings -->
+              <div class="col-12 col-md-6 col-lg-3">
+                <div class="specialty-card">
+                  <div class="specialty-card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" alt="Weddings & Engagements" />
+                    <span class="specialty-badge"><i class="bi bi-heart-fill text-danger me-1"></i> Weddings</span>
+                  </div>
+                  <div class="p-3 d-flex flex-column flex-grow-1">
+                    <h5 class="fw-bold mb-2">Weddings & Engagements</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">Cinematic candid storytelling, luxury pre-shoots, aerial drone highlights, and bespoke flush-mount albums.</p>
+                    <button class="btn btn-sm btn-outline-primary fw-semibold w-100" onclick="switchTab('packages')">
+                      Browse Packages <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Specialty 2: Corporate Summits -->
+              <div class="col-12 col-md-6 col-lg-3">
+                <div class="specialty-card">
+                  <div class="specialty-card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80" alt="Corporate Galas" />
+                    <span class="specialty-badge"><i class="bi bi-briefcase-fill text-info me-1"></i> Corporate</span>
+                  </div>
+                  <div class="p-3 d-flex flex-column flex-grow-1">
+                    <h5 class="fw-bold mb-2">Corporate Galas & Keynotes</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">High-profile summit coverage, VIP arrivals, executive stage portraits, and rapid same-day press releases.</p>
+                    <button class="btn btn-sm btn-outline-primary fw-semibold w-100" onclick="switchTab('packages')">
+                      Browse Packages <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Specialty 3: Birthdays & Parties -->
+              <div class="col-12 col-md-6 col-lg-3">
+                <div class="specialty-card">
+                  <div class="specialty-card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=600&q=80" alt="Milestone Celebrations" />
+                    <span class="specialty-badge"><i class="bi bi-balloon-fill text-warning me-1"></i> Celebrations</span>
+                  </div>
+                  <div class="p-3 d-flex flex-column flex-grow-1">
+                    <h5 class="fw-bold mb-2">Birthdays & Private Parties</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">Vibrant candids, guest laughs, decor highlights, and instant social-ready photo collections.</p>
+                    <button class="btn btn-sm btn-outline-primary fw-semibold w-100" onclick="switchTab('packages')">
+                      Browse Packages <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Specialty 4: Fashion & Concerts -->
+              <div class="col-12 col-md-6 col-lg-3">
+                <div class="specialty-card">
+                  <div class="specialty-card-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80" alt="Concerts & Fashion" />
+                    <span class="specialty-badge"><i class="bi bi-music-note-beamed text-primary me-1"></i> Concerts & Shows</span>
+                  </div>
+                  <div class="p-3 d-flex flex-column flex-grow-1">
+                    <h5 class="fw-bold mb-2">Concerts & Fashion Shows</h5>
+                    <p class="text-muted small mb-3 flex-grow-1">Dynamic stage lighting capture, runway portraits, crowd energy, and 4K ultra-sharp details.</p>
+                    <button class="btn btn-sm btn-outline-primary fw-semibold w-100" onclick="openCustomBookingModal()">
+                      Custom Request <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Active Bookings Quick View -->
-          <div class="card border-0 shadow-sm rounded-3">
-            <div class="card-header bg-white py-3 border-0">
-              <h5 class="fw-bold mb-0">Recent Bookings</h5>
-            </div>
-            <div class="table-responsive">
-              <table class="table align-middle table-hover mb-0">
-                <thead class="table-light">
-                  <tr style="font-size: 13px;">
-                    <th>BOOKING ID</th>
-                    <th>EVENT TITLE</th>
-                    <th>PACKAGE</th>
-                    <th>EVENT DATE</th>
-                    <th>TOTAL</th>
-                    <th>STATUS</th>
-                    <th class="text-end">ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody id="dashboardRecentTable">
-                  <tr>
-                    <td colspan="7" class="text-center text-muted py-3">Loading recent bookings...</td>
-                  </tr>
-                </tbody>
-              </table>
+          <!-- 4. WHY CHOOSE SNAPPRO VALUE PROPOSITIONS -->
+          <div class="mb-5 bg-white p-4 p-md-5 rounded-4 border">
+            <div class="row align-items-center g-4">
+              <div class="col-12 col-lg-4">
+                <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 rounded-pill text-uppercase" style="font-size: 11px;">Why SnapPro</span>
+                <h2 class="fw-bold mt-2 mb-3">Engineered for Flawless Event Photography</h2>
+                <p class="text-muted mb-4">We combine top-tier artistic talent with an automated client portal, transparent packages, and uncompromising quality standards.</p>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-primary fw-semibold" onclick="switchTab('packages')">
+                    View All Packages
+                  </button>
+                  <button class="btn btn-outline-secondary fw-semibold" onclick="openCustomBookingModal()">
+                    Custom Quote
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 col-lg-8">
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <div class="why-card">
+                      <div class="why-icon bg-primary-subtle text-primary">
+                        <i class="bi bi-award-fill"></i>
+                      </div>
+                      <h5 class="fw-bold mb-2">Verified Master Photographers</h5>
+                      <p class="text-muted small mb-0">Handpicked industry veterans equipped with flagship full-frame cameras, prime cinema lenses, and off-camera lighting.</p>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-sm-6">
+                    <div class="why-card">
+                      <div class="why-icon bg-warning-subtle text-warning">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                      </div>
+                      <h5 class="fw-bold mb-2">Lightning 48h Preview Delivery</h5>
+                      <p class="text-muted small mb-0">Never wait weeks for sneak peeks. Access a curated highlight reel within 48 hours for immediate social media sharing.</p>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-sm-6">
+                    <div class="why-card">
+                      <div class="why-icon bg-success-subtle text-success">
+                        <i class="bi bi-palette-fill"></i>
+                      </div>
+                      <h5 class="fw-bold mb-2">Studio-Grade Color Grading</h5>
+                      <p class="text-muted small mb-0">Every delivered photo undergoes individual master retouching, exposure optimization, and tailored artistic color science.</p>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-sm-6">
+                    <div class="why-card">
+                      <div class="why-icon bg-info-subtle text-info">
+                        <i class="bi bi-shield-lock-fill"></i>
+                      </div>
+                      <h5 class="fw-bold mb-2">Transparent & Guaranteed</h5>
+                      <p class="text-muted small mb-0">Clear fixed rates, simple advance bookings, reliable photographer arrival guarantees, and zero surprise fees.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <!-- 5. HOW IT WORKS 3-STEP JOURNEY -->
+          <div class="mb-5">
+            <div class="text-center mb-5">
+              <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-2 rounded-pill text-uppercase" style="font-size: 11px;">Seamless Process</span>
+              <h2 class="fw-bold mt-2 mb-2">How Booking Works in 3 Simple Steps</h2>
+              <p class="text-muted" style="max-width: 550px; margin: 0 auto;">From package selection to cloud gallery download, experience hassle-free event coverage.</p>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 rounded-4 bg-white text-center">
+                  <div class="d-flex justify-content-center mb-3">
+                    <div class="step-pill">1</div>
+                  </div>
+                  <h5 class="fw-bold mb-2">Select or Customize</h5>
+                  <p class="text-muted small mb-0">Browse our transparent packages or submit a custom event request with your unique requirements.</p>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 rounded-4 bg-white text-center">
+                  <div class="d-flex justify-content-center mb-3">
+                    <div class="step-pill">2</div>
+                  </div>
+                  <h5 class="fw-bold mb-2">Confirmation & Crew Lock</h5>
+                  <p class="text-muted small mb-0">Our Client Relations Officer confirms the date, locks equipment, and assigns your dedicated lead photographer.</p>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <div class="card h-100 border-0 shadow-sm p-4 rounded-4 bg-white text-center">
+                  <div class="d-flex justify-content-center mb-3">
+                    <div class="step-pill">3</div>
+                  </div>
+                  <h5 class="fw-bold mb-2">Event Shoot & Cloud Gallery</h5>
+                  <p class="text-muted small mb-0">Enjoy your special day! Access full-resolution photos directly through your client portal deliverables tab.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. CLIENT TESTIMONIALS & REVIEWS -->
+          <div class="mb-5">
+            <div class="text-center mb-4">
+              <span class="badge bg-warning-subtle text-warning fw-bold px-3 py-2 rounded-pill text-uppercase" style="font-size: 11px;">Client Stories</span>
+              <h2 class="fw-bold mt-2 mb-2">What Our Clients Say</h2>
+              <p class="text-muted">Real reviews from satisfied event hosts, corporate managers, and couples.</p>
+            </div>
+
+            <div class="row g-4">
+              <div class="col-12 col-md-4">
+                <div class="testimonial-card">
+                  <div>
+                    <div class="text-warning mb-2">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-dark small mb-3 fst-italic">"The photographer arrived 30 minutes early, coordinated with our sound crew smoothly, and delivered the preview photos the same evening! Exceptional service."</p>
+                  </div>
+                  <div class="d-flex align-items-center pt-3 border-top">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 38px; height: 38px; font-size: 13px;">AL</div>
+                    <div>
+                      <h6 class="mb-0 fw-bold" style="font-size: 13px;">Amanda Lewis</h6>
+                      <small class="text-muted" style="font-size: 11px;">Tech Symposium Keynote</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <div class="testimonial-card">
+                  <div>
+                    <div class="text-warning mb-2">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-dark small mb-3 fst-italic">"SnapPro covered our annual gala with 400+ attendees. The candid shots and lighting were flawless. We downloaded the entire high-res album directly from the portal."</p>
+                  </div>
+                  <div class="d-flex align-items-center pt-3 border-top">
+                    <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 38px; height: 38px; font-size: 13px;">DW</div>
+                    <div>
+                      <h6 class="mb-0 fw-bold" style="font-size: 13px;">Dinesh Wickramasinghe</h6>
+                      <small class="text-muted" style="font-size: 11px;">Corporate Annual Gala</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <div class="testimonial-card">
+                  <div>
+                    <div class="text-warning mb-2">
+                      <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="text-dark small mb-3 fst-italic">"Booking through the website was so simple. The advance fee was clear, the custom requirements were noted exactly, and the album exceeded all expectations!"</p>
+                  </div>
+                  <div class="d-flex align-items-center pt-3 border-top">
+                    <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 38px; height: 38px; font-size: 13px;">SF</div>
+                    <div>
+                      <h6 class="mb-0 fw-bold" style="font-size: 13px;">Sachini Fernando</h6>
+                      <small class="text-muted" style="font-size: 11px;">Wedding & Reception</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7. CALL TO ACTION BOTTOM BANNER -->
+          <div class="cta-banner text-center position-relative overflow-hidden mb-4">
+            <div class="position-relative z-1">
+              <h2 class="fw-bold mb-2">Ready to Capture Your Next Big Event?</h2>
+              <p class="lead mb-4 text-light opacity-90" style="max-width: 580px; margin: 0 auto; font-size: 1rem;">
+                Browse standard packages or submit a custom booking request to lock in your date with our top event photographers.
+              </p>
+              <div class="d-flex justify-content-center flex-wrap gap-3">
+                <button class="btn btn-light btn-lg px-4 py-2 fw-bold shadow-sm text-primary" onclick="switchTab('packages')">
+                  <i class="bi bi-bag-check me-2"></i> Browse All Packages
+                </button>
+                <button class="btn btn-outline-light btn-lg px-4 py-2 fw-semibold" onclick="openCustomBookingModal()">
+                  <i class="bi bi-stars me-2"></i> Custom Booking Request
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- TAB 2: MY BOOKINGS (FULL LIST) -->
+        <!-- TAB 2: MY BOOKINGS (Gated / Accessible when logged in) -->
         <div class="tab-pane fade" id="bookings">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
               <h3 class="fw-bold mb-1">Booking History & Status</h3>
               <p class="text-muted mb-0">Monitor request statuses submitted through the portal.</p>
             </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#customBookingModal">
-              <i class="bi bi-stars me-1"></i> Custom Booking Request
-            </button>
+            <div>
+              <button class="btn btn-primary" onclick="openCustomBookingModal()">
+                <i class="bi bi-plus-circle me-1"></i> New Booking Request
+              </button>
+            </div>
           </div>
 
-          <div class="card border-0 shadow-sm rounded-3">
+          <!-- GUEST EMPTY STATE (Shown if not logged in) -->
+          <div id="bookingsGuestPrompt" class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white" style="display: none;">
+            <div class="d-inline-flex align-items-center justify-content-center bg-primary-subtle text-primary rounded-circle mb-3 mx-auto" style="width: 64px; height: 64px;">
+              <i class="bi bi-lock-fill fs-2"></i>
+            </div>
+            <h4 class="fw-bold mb-2">Sign In Required to View Bookings</h4>
+            <p class="text-muted mb-4 mx-auto" style="max-width: 480px;">
+              Please sign in with your SnapPro account to view your photography booking history, assigned lead photographers, and outstanding balances.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+              <a href="login.html" class="btn btn-primary px-4 py-2 fw-semibold" onclick="sessionStorage.setItem('postLoginRedirect', 'customer-dashboard.html#bookings')">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Sign In Now
+              </a>
+              <a href="register.html" class="btn btn-outline-primary px-4 py-2 fw-semibold">
+                <i class="bi bi-person-plus me-2"></i> Create Account
+              </a>
+            </div>
+          </div>
+
+          <!-- LOGGED IN BOOKINGS TABLE -->
+          <div id="bookingsTableCard" class="card border-0 shadow-sm rounded-3">
             <div class="card-body p-0">
               <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0" id="customerBookingList">
@@ -373,11 +1119,16 @@
           </div>
         </div>
 
-        <!-- TAB 3: PACKAGES CATALOG -->
+        <!-- TAB 3: PACKAGES CATALOG (Publicly Accessible) -->
         <div class="tab-pane fade" id="packages">
-          <div class="mb-4">
-            <h3 class="fw-bold mb-1">Available Photography Packages</h3>
-            <p class="text-muted mb-0">Browse packages curated by our Marketing team. Choose one to request your date.</p>
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h3 class="fw-bold mb-1">Available Photography Packages</h3>
+              <p class="text-muted mb-0">Browse packages curated by our Marketing team. Choose one to request your date.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openCustomBookingModal()">
+              <i class="bi bi-stars me-1"></i> Custom Booking Request
+            </button>
           </div>
 
           <div class="row g-4" id="packagesContainer">
@@ -390,12 +1141,12 @@
           </div>
         </div>
 
-        <!-- TAB 4: EVENT GALLERY -->
+        <!-- TAB 4: EVENT GALLERY (Publicly Accessible) -->
         <div class="tab-pane fade" id="gallery">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
               <h3 class="fw-bold mb-1">Deliverables & Event Gallery</h3>
-              <p class="text-muted mb-0">Browse and download photos uploaded by your senior event photographer.</p>
+              <p class="text-muted mb-0">Browse and download sample deliverable photos uploaded by our senior event photographers.</p>
             </div>
             <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-download me-1"></i> Download All ZIP</button>
           </div>
@@ -408,6 +1159,7 @@
                 <select class="form-select">
                   <option selected>Tech Symposium Keynote - Completed (24 Photos)</option>
                   <option>Corporate Annual Gala 2025 - Archived (118 Photos)</option>
+                  <option>Beachside Sunset Wedding - Completed (85 Photos)</option>
                 </select>
               </div>
             </div>
@@ -454,21 +1206,21 @@
           </div>
         </div>
 
-        <!-- TAB 5: REVIEWS & FEEDBACK -->
+        <!-- TAB 5: REVIEWS & FEEDBACK (Publicly Accessible) -->
         <div class="tab-pane fade" id="feedback">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
-              <h3 class="fw-bold mb-1">Feedback & Inquiries</h3>
-              <p class="text-muted mb-0">Share your shooting experience with our team or report any concerns.</p>
+              <h3 class="fw-bold mb-1">Feedback & Reviews</h3>
+              <p class="text-muted mb-0">Share your shooting experience with our team or browse customer testimonials.</p>
             </div>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            <button class="btn btn-primary" onclick="openReviewModal()">
               <i class="bi bi-star me-1"></i> Submit Review
             </button>
           </div>
 
           <div class="card border-0 shadow-sm rounded-3">
             <div class="card-body p-4">
-              <h6 class="fw-bold mb-3">Your Submitted Feedback</h6>
+              <h6 class="fw-bold mb-3">Published Customer Feedback</h6>
               <div class="border rounded p-3 mb-3 bg-light">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <div>
@@ -482,11 +1234,11 @@
                       <span class="text-dark ms-2 fw-semibold">5.0 / 5</span>
                     </div>
                   </div>
-                  <span class="badge bg-success-subtle text-success">Resolved & Published</span>
+                  <span class="badge bg-success-subtle text-success">Verified Client</span>
                 </div>
                 <p class="text-muted small mb-2">"The photographer arrived 30 minutes early, coordinated with our sound crew smoothly, and delivered the preview photos the same evening! Exceptional service."</p>
                 <div class="bg-white p-2 rounded border-start border-3 border-primary small">
-                  <span class="fw-bold text-primary">Client Relations Officer Response:</span> Thank you for trusting SnapPro Amanda! It was our pleasure covering the symposium.
+                  <span class="fw-bold text-primary">Client Relations Officer:</span> Thank you for choosing SnapPro Amanda! It was our pleasure covering your keynote symposium.
                 </div>
               </div>
             </div>
@@ -498,10 +1250,54 @@
   </div>
 </div>
 
+<!-- MODAL: LOGIN REQUIRED PROMPT (When unauthenticated customer performs action) -->
+<div class="modal fade" id="loginPromptModal" tabindex="-1" aria-labelledby="loginPromptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+      <div class="modal-header border-0 bg-primary-subtle px-4 pt-4 pb-2">
+        <div class="d-flex align-items-center">
+          <div class="bg-primary text-white p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+            <i class="bi bi-lock-fill fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-primary mb-0" id="loginPromptModalLabel">Sign In Required</h5>
+            <small class="text-muted">SnapPro Customer Account</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <p class="text-dark mb-3" id="loginPromptMessage">
+          Please sign in or create a free account to book photography packages, request custom shoots, and track your booking deliverables.
+        </p>
+        <div class="p-3 bg-light rounded-3 border small mb-2">
+          <div class="d-flex align-items-center mb-1">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <span>Instant booking confirmation & scheduling</span>
+          </div>
+          <div class="d-flex align-items-center mb-1">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <span>Dedicated lead photographer allocation</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            <span>Private high-res cloud gallery downloads</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 px-4 pb-4 pt-2 d-flex flex-column flex-sm-row gap-2">
+        <button type="button" class="btn btn-light border flex-grow-1" data-bs-dismiss="modal">Continue Browsing</button>
+        <button type="button" class="btn btn-outline-primary flex-grow-1" onclick="handlePromptRegister()">Create Account</button>
+        <button type="button" class="btn btn-primary flex-grow-1 fw-bold" onclick="handlePromptLogin()">Sign In Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: SUBMIT NEW BOOKING REQUEST (UC-01 Scenario) -->
 <div class="modal fade" id="newBookingModal" tabindex="-1" aria-labelledby="newBookingModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content border-0 shadow">
+    <div class="modal-content border-0 shadow rounded-4">
       <div class="modal-header border-bottom px-4 py-3">
         <h5 class="modal-title fw-bold" id="newBookingModalLabel">Request Event Photography</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -512,35 +1308,72 @@
 
           <div class="row g-3">
             <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold small">Photography Package</label>
-              <select class="form-select" id="packageSelect" required>
-                <option value="">Choose a standardized package...</option>
-              </select>
+              <label class="form-label fw-semibold small">Selected Photography Package</label>
+              <input type="hidden" id="selectedPackageId" value="" required />
+              <div class="form-control bg-light text-primary fw-semibold d-flex align-items-center justify-content-between" id="selectedPackageDisplay" style="min-height: 42px;">
+                <span class="d-flex align-items-center text-truncate">
+                  <i class="bi bi-patch-check-fill me-2 text-primary"></i>
+                  <span id="selectedPackageTitle">Standard Photography Package</span>
+                </span>
+                <span class="badge bg-primary text-white border ms-2" id="selectedPackagePriceBadge">LKR 0</span>
+              </div>
             </div>
 
             <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold small">Event Title</label>
+              <label class="form-label fw-semibold small">Event Title <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="eventTitle" placeholder="e.g., Annual Tech Meetup" required />
             </div>
 
             <div class="col-12">
-              <label class="form-label fw-semibold small">Event Location Address</label>
+              <label class="form-label fw-semibold small">Event Location Address <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="eventLocation" placeholder="Full venue location or address" required />
             </div>
 
             <div class="col-12 col-md-4">
-              <label class="form-label fw-semibold small">Event Date</label>
+              <label class="form-label fw-semibold small">Event Date <span class="text-danger">*</span></label>
               <input type="date" class="form-control" id="eventDate" required />
             </div>
 
             <div class="col-6 col-md-4">
-              <label class="form-label fw-semibold small">Start Time</label>
+              <label class="form-label fw-semibold small">Start Time <span class="text-danger">*</span></label>
               <input type="time" class="form-control" id="startTime" required />
             </div>
 
             <div class="col-6 col-md-4">
-              <label class="form-label fw-semibold small">End Time</label>
+              <label class="form-label fw-semibold small">End Time <span class="text-danger">*</span></label>
               <input type="time" class="form-control" id="endTime" required />
+            </div>
+
+            <!-- Interactive Datewise Booked Timeslots Viewer -->
+            <div class="col-12">
+              <div class="p-3 bg-light rounded-3 border" id="bookedSlotsContainer">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
+                  <div class="fw-bold small text-dark d-flex align-items-center">
+                    <i class="bi bi-clock-history me-2 text-primary fs-6"></i>
+                    <span>Booked / Reserved Slots on <span id="selectedDateDisplay" class="text-primary fw-bold">Selected Date</span>:</span>
+                  </div>
+                  <span class="badge bg-white text-secondary border px-2 py-1 small" id="slotsStatusBadge">
+                    <i class="bi bi-info-circle me-1"></i>Select a date
+                  </span>
+                </div>
+                <div id="dateBookedSlotsList" class="d-flex flex-wrap gap-2">
+                  <span class="text-muted small fst-italic">Pick an event date above to check already reserved time intervals.</span>
+                </div>
+                <!-- Real-time time conflict alert -->
+                <div id="slotConflictAlert" class="alert alert-danger d-none py-2 px-3 mt-2 mb-0 small rounded-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-octagon-fill me-2 fs-5 text-danger flex-shrink-0"></i>
+                    <div id="slotConflictMsg"><strong>Time Slot Conflict:</strong> The requested time overlaps with an existing booking on this date. Please pick a non-overlapping time slot.</div>
+                  </div>
+                </div>
+                <!-- Available confirmation -->
+                <div id="slotAvailableAlert" class="alert alert-success d-none py-2 px-3 mt-2 mb-0 small rounded-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill me-2 fs-6 text-success flex-shrink-0"></i>
+                    <span id="slotAvailableMsg">Selected time slot is completely available!</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="col-12">
@@ -554,9 +1387,9 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer border-top px-4 py-3 bg-light">
+        <div class="modal-footer border-top px-4 py-3 bg-light rounded-bottom-4">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4">Submit Booking Request</button>
+          <button type="submit" class="btn btn-primary px-4 fw-semibold" id="btnSubmitStandardBooking">Submit Booking Request</button>
         </div>
       </form>
     </div>
@@ -566,7 +1399,7 @@
 <!-- MODAL: CUSTOM REQUEST EVENT PHOTOGRAPHY -->
 <div class="modal fade" id="customBookingModal" tabindex="-1" aria-labelledby="customBookingModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content border-0 shadow">
+    <div class="modal-content border-0 shadow rounded-4">
       <div class="modal-header border-bottom px-4 py-3">
         <h5 class="modal-title fw-bold" id="customBookingModalLabel">
           <i class="bi bi-stars text-primary me-2"></i>Custom Request Event Photography
@@ -581,7 +1414,7 @@
             <div class="col-12 col-md-6">
               <label class="form-label fw-semibold small">Photography Package</label>
               <div class="form-control bg-light text-primary fw-semibold d-flex align-items-center">
-                <i class="bi bi-patch-check-fill me-2 text-primary"></i>Custom Requirement Event (Advance LKR 3000)
+                <i class="bi bi-patch-check-fill me-2 text-primary"></i>Custom Requirement Event (Advance LKR 3,000)
               </div>
             </div>
 
@@ -610,6 +1443,38 @@
               <input type="time" class="form-control" id="customEndTime" required />
             </div>
 
+            <!-- Interactive Datewise Booked Timeslots Viewer -->
+            <div class="col-12">
+              <div class="p-3 bg-light rounded-3 border" id="customBookedSlotsContainer">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
+                  <div class="fw-bold small text-dark d-flex align-items-center">
+                    <i class="bi bi-clock-history me-2 text-primary fs-6"></i>
+                    <span>Booked / Reserved Slots on <span id="customSelectedDateDisplay" class="text-primary fw-bold">Selected Date</span>:</span>
+                  </div>
+                  <span class="badge bg-white text-secondary border px-2 py-1 small" id="customSlotsStatusBadge">
+                    <i class="bi bi-info-circle me-1"></i>Select a date
+                  </span>
+                </div>
+                <div id="customDateBookedSlotsList" class="d-flex flex-wrap gap-2">
+                  <span class="text-muted small fst-italic">Pick an event date above to check already reserved time intervals.</span>
+                </div>
+                <!-- Real-time time conflict alert -->
+                <div id="customSlotConflictAlert" class="alert alert-danger d-none py-2 px-3 mt-2 mb-0 small rounded-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-octagon-fill me-2 fs-5 text-danger flex-shrink-0"></i>
+                    <div id="customSlotConflictMsg"><strong>Time Slot Conflict:</strong> The requested time overlaps with an existing booking on this date. Please pick a non-overlapping time slot.</div>
+                  </div>
+                </div>
+                <!-- Available confirmation -->
+                <div id="customSlotAvailableAlert" class="alert alert-success d-none py-2 px-3 mt-2 mb-0 small rounded-3">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill me-2 fs-6 text-success flex-shrink-0"></i>
+                    <span id="customSlotAvailableMsg">Selected time slot is completely available!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="col-12">
               <label class="form-label fw-semibold small text-dark d-flex justify-content-between flex-wrap">
                 <span>Custom Requirements / Event Details <span class="text-danger">*</span></span>
@@ -622,9 +1487,9 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer border-top px-4 py-3 bg-light">
+        <div class="modal-footer border-top px-4 py-3 bg-light rounded-bottom-4">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary px-4"><i class="bi bi-send me-1"></i>Submit Custom Booking</button>
+          <button type="submit" class="btn btn-primary px-4 fw-semibold"><i class="bi bi-send me-1"></i>Submit Custom Booking</button>
         </div>
       </form>
     </div>
@@ -634,7 +1499,7 @@
 <!-- MODAL: LEAVE REVIEW & FEEDBACK -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow">
+    <div class="modal-content border-0 shadow rounded-4">
       <div class="modal-header border-bottom">
         <h5 class="modal-title fw-bold">Leave Service Feedback</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -642,10 +1507,8 @@
       <form onsubmit="handleReviewSubmit(event)">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label fw-semibold small">Select Completed Event</label>
-            <select class="form-select" required>
-              <option value="Tech Symposium Keynote">Tech Symposium Keynote (Jul 12, 2026)</option>
-            </select>
+            <label class="form-label fw-semibold small">Event / Shoot Title</label>
+            <input type="text" class="form-control" placeholder="e.g. Tech Symposium Keynote" required />
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold small">Rating (1 to 5 Stars)</label>
@@ -664,18 +1527,18 @@
         </div>
         <div class="modal-footer border-top">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Submit Feedback</button>
+          <button type="submit" class="btn btn-primary fw-semibold">Submit Feedback</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- MODAL: CUSTOMER VIEW BOOKING DETAILS -->
+<!-- MODAL: CUSTOMER VIEW BOOKING DETAILS (WITH STATUS PROGRESS BAR & STEPPER) -->
 <div class="modal fade" id="customerBookingDetailsModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content border-0 shadow">
-      <div class="modal-header border-bottom px-4 py-3 bg-light">
+    <div class="modal-content border-0 shadow rounded-4 overflow-hidden">
+      <div class="modal-header border-bottom px-4 py-3 bg-light rounded-top-4">
         <div class="d-flex align-items-center">
           <div class="bg-primary text-white p-2 rounded-3 me-3">
             <i class="bi bi-calendar-event fs-5"></i>
@@ -689,6 +1552,72 @@
       </div>
       <div class="modal-body px-4 py-4">
         <div class="row g-4">
+          
+          <!-- Booking Status Progress Tracker & Progress Bar -->
+          <div class="col-12">
+            <div class="status-tracker-container">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-activity text-primary me-2 fs-5"></i>
+                  <span class="fw-bold small text-uppercase text-secondary">Booking Status Progress</span>
+                </div>
+                <span id="custDetailStatusPill" class="badge badge-soft-warning px-3 py-1 fw-bold">Pending</span>
+              </div>
+
+              <!-- Animated Progress Bar -->
+              <div class="progress mb-3" style="height: 10px; border-radius: 8px; background-color: #e2e8f0;">
+                <div id="custDetailProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%;"></div>
+              </div>
+
+              <!-- 4-Step Milestone Stepper -->
+              <div class="d-flex justify-content-between position-relative mt-2" id="custDetailStepper">
+                <!-- Step 1: Pending -->
+                <div class="step-node active-pending" id="custStep1">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-clock-history"></i>
+                  </div>
+                  <span class="step-title">Pending</span>
+                  <span class="step-desc">Awaiting Approval</span>
+                </div>
+
+                <!-- Step 2: Confirmed -->
+                <div class="step-node" id="custStep2">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-calendar2-check"></i>
+                  </div>
+                  <span class="step-title">Confirmed</span>
+                  <span class="step-desc">Photographer Assigned</span>
+                </div>
+
+                <!-- Step 3: In Progress -->
+                <div class="step-node" id="custStep3">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-camera"></i>
+                  </div>
+                  <span class="step-title">Shoot Day</span>
+                  <span class="step-desc">Coverage & Edits</span>
+                </div>
+
+                <!-- Step 4: Completed -->
+                <div class="step-node" id="custStep4">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-cloud-arrow-down"></i>
+                  </div>
+                  <span class="step-title">Completed</span>
+                  <span class="step-desc">Photos Delivered</span>
+                </div>
+              </div>
+
+              <!-- Status Note / Alert Banner -->
+              <div id="custDetailStatusAlert" class="mt-3">
+                <div class="p-2 px-3 bg-light rounded-3 border small text-muted d-flex align-items-center">
+                  <i class="bi bi-info-circle text-primary me-2 fs-6"></i>
+                  <span id="custDetailStatusMsg">Your booking request has been submitted and is currently under review by our operations team.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Event Info -->
           <div class="col-12 col-md-6">
             <div class="p-3 bg-light rounded-3 h-100 border">
@@ -744,7 +1673,7 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer border-top px-4 py-3 bg-light">
+      <div class="modal-footer border-top px-4 py-3 bg-light rounded-bottom-4">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
@@ -762,7 +1691,9 @@
     event.preventDefault();
     const modalEl = document.getElementById('reviewModal');
     const modalInstance = bootstrap.Modal.getInstance(modalEl);
-    modalInstance.hide();
+    if (modalInstance) {
+      modalInstance.hide();
+    }
     alert('Thank you! Your review has been submitted for verification.');
   }
 </script>

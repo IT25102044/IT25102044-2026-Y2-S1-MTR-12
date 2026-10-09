@@ -25,11 +25,28 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
-    /* Sidebar Navigation */
+    /* Fixed Left Sidebar Navigation */
     .sidebar {
-      min-height: 100vh;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
       background-color: var(--surface-card);
       border-right: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
     }
 
     .nav-link {
@@ -79,6 +96,100 @@
       color: #2563eb;
       border: 1px solid #dbeafe;
     }
+
+    /* Booking Status Tracker & Progress Bar */
+    .status-tracker-container {
+      background: #f8fafc;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .step-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      margin-bottom: 6px;
+      transition: all 0.3s ease;
+      border: 2px solid #cbd5e1;
+      background-color: #ffffff;
+      color: #94a3b8;
+    }
+
+    .step-node.completed .step-icon-wrap {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+    }
+
+    .step-node.active-pending .step-icon-wrap {
+      background-color: #f59e0b;
+      border-color: #f59e0b;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.22);
+      animation: pulse-warning 2s infinite;
+    }
+
+    .step-node.active-confirmed .step-icon-wrap {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.22);
+      animation: pulse-success 2s infinite;
+    }
+
+    .step-node.active-completed .step-icon-wrap {
+      background-color: #2563eb;
+      border-color: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.22);
+    }
+
+    .step-node.cancelled .step-icon-wrap {
+      background-color: #ef4444;
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+    }
+
+    .step-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 2px;
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    @keyframes pulse-warning {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    @keyframes pulse-success {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
   </style>
 </head>
 <body>
@@ -86,39 +197,43 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Desktop Sidebar -->
-    <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4 sticky-top">
-      <div class="d-flex align-items-center mb-4 px-2">
-        <i class="bi bi-camera-reels-fill text-primary fs-3 me-2"></i>
-        <h5 class="mb-0 fw-bold">SnapPro</h5>
+    <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar px-3 py-4">
+      <div>
+        <div class="d-flex align-items-center mb-4 px-2">
+          <i class="bi bi-camera-reels-fill text-primary fs-3 me-2"></i>
+          <h5 class="mb-0 fw-bold">SnapPro</h5>
+        </div>
+        <div class="small text-uppercase text-muted fw-bold px-2 mb-2" style="font-size: 11px;">Administration</div>
+        <ul class="nav flex-column mb-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#users-tab" data-bs-toggle="tab">
+              <i class="bi bi-people me-2"></i> User Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#bookings-tab" data-bs-toggle="tab">
+              <i class="bi bi-calendar-event me-2"></i> Booking Management
+            </a>
+          </li>
+        </ul>
       </div>
-      <div class="small text-uppercase text-muted fw-bold px-2 mb-2" style="font-size: 11px;">Administration</div>
-      <ul class="nav flex-column mb-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="#users-tab" data-bs-toggle="tab">
-            <i class="bi bi-people me-2"></i> User Management
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#bookings-tab" data-bs-toggle="tab">
-            <i class="bi bi-calendar-event me-2"></i> Booking Management
-          </a>
-        </li>
-      </ul>
-      <hr class="text-secondary opacity-25 my-4" />
-      <div class="px-2">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center me-2" id="adminInitials" style="width: 38px; height: 38px; font-size: 13px;">
-              AD
+      <div class="pt-3">
+        <hr class="text-secondary opacity-25 my-3" />
+        <div class="px-2">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center me-2" id="adminInitials" style="width: 38px; height: 38px; font-size: 13px;">
+                AD
+              </div>
+              <div class="overflow-hidden">
+                <p class="mb-0 fw-semibold text-truncate small" id="adminName">System Admin</p>
+                <span class="text-muted text-truncate d-block" id="adminEmail" style="font-size: 11px;">admin@snappro.com</span>
+              </div>
             </div>
-            <div class="overflow-hidden">
-              <p class="mb-0 fw-semibold text-truncate small" id="adminName">System Admin</p>
-              <span class="text-muted text-truncate d-block" id="adminEmail" style="font-size: 11px;">admin@snappro.com</span>
-            </div>
+            <button class="btn btn-sm btn-outline-danger p-1 ms-1" title="Sign Out" onclick="signOut()">
+              <i class="bi bi-box-arrow-right"></i>
+            </button>
           </div>
-          <button class="btn btn-sm btn-outline-danger p-1 ms-1" title="Sign Out" onclick="signOut()">
-            <i class="bi bi-box-arrow-right"></i>
-          </button>
         </div>
       </div>
     </nav>
@@ -542,6 +657,71 @@
       </div>
       <div class="modal-body px-4 py-4">
         <div class="row g-4">
+          <!-- Booking Status Progress Tracker & Progress Bar -->
+          <div class="col-12">
+            <div class="status-tracker-container">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-activity text-primary me-2 fs-5"></i>
+                  <span class="fw-bold small text-uppercase text-secondary">Booking Lifecycle Progress</span>
+                </div>
+                <span id="adminDetailStatusPill" class="badge badge-soft-warning px-3 py-1 fw-bold">Pending</span>
+              </div>
+
+              <!-- Animated Progress Bar -->
+              <div class="progress mb-3" style="height: 10px; border-radius: 8px; background-color: #e2e8f0;">
+                <div id="adminDetailProgressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 25%;"></div>
+              </div>
+
+              <!-- 4-Step Milestone Stepper -->
+              <div class="d-flex justify-content-between position-relative mt-2" id="adminDetailStepper">
+                <!-- Step 1: Pending -->
+                <div class="step-node active-pending" id="adminStep1">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-clock-history"></i>
+                  </div>
+                  <span class="step-title">Pending</span>
+                  <span class="step-desc">Awaiting Review</span>
+                </div>
+
+                <!-- Step 2: Confirmed -->
+                <div class="step-node" id="adminStep2">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-calendar2-check"></i>
+                  </div>
+                  <span class="step-title">Confirmed</span>
+                  <span class="step-desc">Photographer Assigned</span>
+                </div>
+
+                <!-- Step 3: In Progress -->
+                <div class="step-node" id="adminStep3">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-camera"></i>
+                  </div>
+                  <span class="step-title">Shoot Day</span>
+                  <span class="step-desc">Coverage & Edits</span>
+                </div>
+
+                <!-- Step 4: Completed -->
+                <div class="step-node" id="adminStep4">
+                  <div class="step-icon-wrap">
+                    <i class="bi bi-cloud-arrow-down"></i>
+                  </div>
+                  <span class="step-title">Completed</span>
+                  <span class="step-desc">Photos Delivered</span>
+                </div>
+              </div>
+
+              <!-- Status Note / Alert Banner -->
+              <div id="adminDetailStatusAlert" class="mt-3">
+                <div class="p-2 px-3 bg-warning-subtle border border-warning-subtle rounded-3 small text-warning-emphasis d-flex align-items-center">
+                  <i class="bi bi-clock-history me-2 fs-6"></i>
+                  <span id="adminDetailStatusMsg">Request is Pending. Awaiting review and crew scheduling.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Client Info -->
           <div class="col-12 col-md-6">
             <div class="p-3 bg-light rounded-3 h-100 border">
