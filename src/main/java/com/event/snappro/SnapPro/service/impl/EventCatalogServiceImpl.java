@@ -2,12 +2,13 @@ package com.event.snappro.SnapPro.service.impl;
 
 import com.event.snappro.SnapPro.dto.CatalogRequestDTO;
 import com.event.snappro.SnapPro.dto.CatalogResponseDTO;
+import com.event.snappro.SnapPro.dto.CatalogUpdateDTO;
 import com.event.snappro.SnapPro.entity.EventCatalog;
 import com.event.snappro.SnapPro.entity.EventPhoto;
-import com.event.snappro.SnapPro.repository.EventCatalogRepository;
 import com.event.snappro.SnapPro.repository.EventBookingRepository;
 import com.event.snappro.SnapPro.repository.EventPhotoRepository;
 import com.event.snappro.SnapPro.service.EventCatalogService;
+import com.event.snappro.SnapPro.repository.EventCatalogRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class EventCatalogServiceImpl implements EventCatalogService {
@@ -108,6 +110,35 @@ public class EventCatalogServiceImpl implements EventCatalogService {
                 .orElseThrow(() -> new RuntimeException("Catalog not found with ID: " + id));
 
         return convertToResponseDTO(catalog);
+    }
+
+    // =====================================================
+    // EDIT EXISTING ALBUM (NAME AND DESCRIPTION ONLY)
+    // =====================================================
+
+    @Override
+    @Transactional
+    public CatalogResponseDTO updateCatalog(Integer id, CatalogUpdateDTO request) {
+        if (id == null || !eventCatalogRepository.existsById(id)) {
+            throw new NoSuchElementException("Album not found.");
+        }
+
+        String name = request.getCatalogName() == null ? "" : request.getCatalogName().trim();
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Album name is required.");
+        }
+        if (name.length() > 150) {
+            throw new IllegalArgumentException("Album name must be 150 characters or fewer.");
+        }
+
+        String description = request.getDescription() == null ? "" : request.getDescription().trim();
+
+        eventCatalogRepository.updateAlbumDetails(id, name, description);
+
+        // Reload so updatedAt in the API response reflects the database timestamp.
+        EventCatalog updated = eventCatalogRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Album not found."));
+        return convertToResponseDTO(updated);
     }
 
     // =====================================================

@@ -4,10 +4,10 @@ import com.event.snappro.SnapPro.dto.EventPhotoResponseDTO;
 import com.event.snappro.SnapPro.dto.EventPhotoUpdateDTO;
 import com.event.snappro.SnapPro.entity.EventCatalog;
 import com.event.snappro.SnapPro.entity.EventPhoto;
-import com.event.snappro.SnapPro.repository.EventCatalogRepository;
 import com.event.snappro.SnapPro.repository.EventPhotoRepository;
 import com.event.snappro.SnapPro.service.EventPhotoService;
 import com.event.snappro.SnapPro.service.PhotographerProfileService;
+import com.event.snappro.SnapPro.repository.EventCatalogRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
