@@ -511,49 +511,6 @@
                                 </form>
                             </section>
                         </div>
-
-                        <div class="col-12 col-xl-8">
-                            <section class="card border-0 shadow-sm rounded-3 p-4">
-                                <h5 class="fw-bold mb-1">Password</h5>
-                                <p class="text-muted small mb-4">Your current password is not displayed. Password changes are unavailable until the group login system is updated.</p>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="currentProfilePassword">Current Password</label>
-                                    <input class="form-control" id="currentProfilePassword" type="password" value="Not displayed" readonly aria-readonly="true" autocomplete="off">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="newProfilePassword">New Password</label>
-                                    <div class="input-group">
-                                        <input class="form-control" id="newProfilePassword" type="password" minlength="8" autocomplete="new-password">
-                                        <button class="btn btn-outline-secondary" type="button" title="Show new password" aria-label="Show new password" onclick="toggleProfilePassword('newProfilePassword', this)">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="confirmProfilePassword">Re-enter New Password</label>
-                                    <div class="input-group">
-                                        <input class="form-control" id="confirmProfilePassword" type="password" minlength="8" autocomplete="new-password">
-                                        <button class="btn btn-outline-secondary" type="button" title="Show re-entered password" aria-label="Show re-entered password" onclick="toggleProfilePassword('confirmProfilePassword', this)">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="passwordChangeMessage" class="alert d-none mb-3" role="status"></div>
-
-                                <div class="d-flex align-items-center gap-3">
-                                    <button class="btn btn-outline-primary" id="changeProfilePasswordButton" type="button" onclick="changePhotographerPassword()">
-                                        <i class="bi bi-key me-1"></i>Change Password
-                                    </button>
-                                    <span id="passwordChangeSuccess" class="d-none" role="status" aria-label="Password changed successfully">
-                                        <i class="bi bi-check-circle-fill text-success fs-4"></i>
-                                    </span>
-                                </div>
-                            </section>
-                        </div>
                     </div>
                 </div>
 
