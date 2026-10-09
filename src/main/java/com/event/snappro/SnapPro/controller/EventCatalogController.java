@@ -2,6 +2,7 @@ package com.event.snappro.SnapPro.controller;
 
 import com.event.snappro.SnapPro.dto.CatalogRequestDTO;
 import com.event.snappro.SnapPro.dto.CatalogResponseDTO;
+import com.event.snappro.SnapPro.dto.CatalogUpdateDTO;
 import com.event.snappro.SnapPro.service.EventCatalogService;
 
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/catalogs")
@@ -77,6 +79,27 @@ public class EventCatalogController {
             return ResponseEntity.ok(eventCatalogService.getCatalogById(id));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(Map.of("message", e.getMessage()));
+        }
+    }
+
+
+    // =====================================================
+    // PUT /api/catalogs/{id} - EDIT ALBUM NAME / DESCRIPTION
+    // =====================================================
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCatalog(
+            @PathVariable Integer id,
+            @Valid @RequestBody CatalogUpdateDTO request
+    ) {
+        try {
+            return ResponseEntity.ok(eventCatalogService.updateCatalog(id, request));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(404).body(Map.of("message", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("message", "Failed to update album."));
         }
     }
 

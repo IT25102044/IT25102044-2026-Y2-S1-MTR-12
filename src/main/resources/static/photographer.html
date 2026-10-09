@@ -130,6 +130,14 @@
             background-color: var(--primary-subtle);
         }
 
+        .upload-area:focus-visible,
+        .upload-area.drag-over {
+            border-color: var(--primary-accent);
+            background-color: var(--primary-subtle) !important;
+            outline: 3px solid rgba(37, 99, 235, 0.15);
+            outline-offset: 2px;
+        }
+
         /* ================================
            PHOTO CARDS
         ================================= */
@@ -663,37 +671,33 @@
 
                                     </div>
 
-                                    <div class="upload-area bg-white" onclick="openFileSelector()">
+                                    <div class="upload-area bg-white" id="photoDropZone"
+                                         role="button" tabindex="0"
+                                         aria-label="Drop JPG or PNG images here, or press Enter to browse photos">
 
                                         <i class="bi bi-cloud-arrow-up text-primary" style="font-size:45px;"></i>
 
                                         <h6 class="fw-bold mt-2">
 
-                                            Select Event Photos
+                                            Drag &amp; Drop Photos Here
 
                                         </h6>
 
                                         <p class="text-muted small mb-3">
 
-                                            Click here to choose one or multiple photos (JPG, JPEG, PNG - Max 10MB each)
+                                            Drop photos into this area or click anywhere to browse (JPG, JPEG, PNG - Max 10MB each)
 
                                         </p>
 
-                                        <button type="button" class="btn btn-sm btn-primary">
-
-                                            <i class="bi bi-folder2-open me-1"></i> Choose Photos
-
-                                        </button>
-
-                                        <input type="file"
-                                               id="photoInput"
-                                               accept=".jpg,.jpeg,.png"
-                                               multiple
-                                               hidden>
-
                                     </div>
 
-                                    <div id="validationResult" class="mt-3"></div>
+                                    <input type="file"
+                                           id="photoInput"
+                                           accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                                           multiple
+                                           hidden>
+
+                                    <div id="validationResult" class="mt-3" aria-live="polite"></div>
 
                                     <div class="d-flex justify-content-end gap-2 mt-3">
 
@@ -1173,6 +1177,43 @@
 
 
 <!-- =========================================================
+     EDIT ALBUM MODAL
+========================================================== -->
+
+<div class="modal fade" id="editCatalogModal" tabindex="-1" aria-labelledby="editCatalogModalTitle">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="editCatalogModalTitle">
+                    <i class="bi bi-pencil-square text-primary me-2"></i>Edit Album
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editCatalogId">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold" for="editCatalogName">
+                        Album Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" id="editCatalogName" class="form-control" maxlength="150" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold" for="editCatalogDescription">Description</label>
+                    <textarea id="editCatalogDescription" class="form-control" rows="3"></textarea>
+                </div>
+                <div id="editCatalogError" class="alert alert-danger small d-none mb-0" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveEditCatalogButton" onclick="saveEditedCatalog()">
+                    <i class="bi bi-check-circle me-1"></i>Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
      CONFIRM DELETE ALBUM MODAL
 ========================================================== -->
 
@@ -1262,7 +1303,8 @@
             const body = await response.json();
             const user = body.data;
             if (!response.ok || !body.status || !user ||
-                String(user.role || '').toUpperCase() !== 'SENIOR_PHOTOGRAPHER') {
+                !['SENIORPHOTOGRAPHER', 'SENIOREVENTPHOTOGRAPHER'].includes(
+                    String(user.role || '').trim().toUpperCase().replace(/[\s_-]+/g, ''))) {
                 window.location.replace('/login.html');
                 return;
             }
@@ -1467,7 +1509,7 @@
             });
 
             if (!response.ok) {
-                throw new Error("Bookings request failed with status " + response.status);
+                throw new Error(await getErrorMessage(response));
             }
 
             const bookings = await response.json();
@@ -1556,11 +1598,14 @@
     ========================================================= */
 
     async function getErrorMessage(response) {
-        if (response.status === 401 || response.status === 403) {
-            setTimeout(() => {
-                logout();
-            }, 2000);
-            return "Your login session has expired or is invalid. Redirecting to login page...";
+        if (response.status === 401) {
+            // An expired/invalid session requires a fresh login, not a logout API call.
+            window.location.replace('/login.html');
+            return "Your login session has expired. Please log in again.";
+        }
+        if (response.status === 403) {
+            // Forbidden actions must not destroy an otherwise valid login session.
+            return "Access denied. You do not have permission to perform this action.";
         }
 
         try {
@@ -1718,13 +1763,10 @@
                 <div class="card border h-100 shadow-sm rounded-3">
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div>
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center mb-2">
                                 <span class="badge badge-soft-primary">
                                     <i class="bi bi-images me-1"></i> ${cat.photoCount || 0} Photos
                                 </span>
-                                <small class="text-muted" style="font-size:11px;">
-                                    ID: ALB-${cat.id}
-                                </small>
                             </div>
                             <h5 class="fw-bold text-dark mb-2">${htmlText(cat.catalogName)}</h5>
                             <p class="text-muted small mb-3">
@@ -1735,6 +1777,9 @@
                             <button class="btn btn-sm btn-primary flex-fill" data-photographer-action="open">
                                 <i class="bi bi-folder2-open me-1"></i> Open Album
                             </button>
+                            <button class="btn btn-sm btn-outline-secondary" title="Edit Album" aria-label="Edit Album" data-photographer-action="edit">
+                                <i class="bi bi-pencil"></i>
+                            </button>
                             <button class="btn btn-sm btn-outline-danger" title="Delete Album" data-photographer-action="delete">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -1744,10 +1789,82 @@
             `;
             card.querySelector('[data-photographer-action="open"]').addEventListener('click',
                 () => openCatalog(cat.id, cat.catalogName, cat.description || ''));
+            card.querySelector('[data-photographer-action="edit"]').addEventListener('click',
+                () => openEditCatalogModal(cat.id));
             card.querySelector('[data-photographer-action="delete"]').addEventListener('click',
                 () => openDeleteCatalogModal(cat.id, cat.catalogName));
             container.appendChild(card);
         });
+    }
+
+
+    function openEditCatalogModal(catalogId) {
+        const catalog = eventCatalogs.find(cat => Number(cat.id) === Number(catalogId));
+        if (!catalog) return;
+
+        document.getElementById("editCatalogId").value = catalog.id;
+        document.getElementById("editCatalogName").value = catalog.catalogName || "";
+        document.getElementById("editCatalogDescription").value = catalog.description || "";
+        document.getElementById("editCatalogError").classList.add("d-none");
+        document.getElementById("editCatalogError").textContent = "";
+        document.getElementById("saveEditCatalogButton").disabled = false;
+
+        new bootstrap.Modal(document.getElementById("editCatalogModal")).show();
+    }
+
+
+    async function saveEditedCatalog() {
+        const id = Number(document.getElementById("editCatalogId").value);
+        const catalogName = document.getElementById("editCatalogName").value.trim();
+        const description = document.getElementById("editCatalogDescription").value.trim();
+        const errorBox = document.getElementById("editCatalogError");
+        const saveButton = document.getElementById("saveEditCatalogButton");
+
+        const showError = message => {
+            errorBox.textContent = message;
+            errorBox.classList.remove("d-none");
+        };
+
+        errorBox.classList.add("d-none");
+        if (!catalogName) {
+            showError("Album name is required.");
+            return;
+        }
+        if (catalogName.length > 150) {
+            showError("Album name must be 150 characters or fewer.");
+            return;
+        }
+
+        saveButton.disabled = true;
+        try {
+            const response = await fetch(API_CATALOG_URL + "/" + id, {
+                method: "PUT",
+                headers: { ...authHeaders(), "Content-Type": "application/json" },
+                body: JSON.stringify({ catalogName, description })
+            });
+            if (!response.ok) {
+                throw new Error(await getErrorMessage(response));
+            }
+
+            const updated = await response.json();
+            bootstrap.Modal.getInstance(document.getElementById("editCatalogModal")).hide();
+            if (Number(selectedCatalogId) === id) {
+                selectedCatalogName = updated.catalogName;
+                document.getElementById("activeCatalogHeader").textContent = updated.catalogName;
+                document.getElementById("activeCatalogDescription").textContent =
+                    updated.description || "Manage and view photographs in this album.";
+            }
+            if (showingAllCatalogs) {
+                await loadAllCatalogs();
+            } else {
+                await loadCatalogsForSelectedEvent();
+            }
+        } catch (error) {
+            console.error(error);
+            showError("Failed to update album: " + error.message);
+        } finally {
+            saveButton.disabled = false;
+        }
     }
 
 
@@ -2042,48 +2159,112 @@
         document.getElementById("photoInput").click();
     }
 
-    document.getElementById("photoInput").addEventListener("change", validatePhotos);
+    const photoDropZone = document.getElementById("photoDropZone");
+    const photoInput = document.getElementById("photoInput");
+    let photoDragDepth = 0;
 
-    function validatePhotos() {
-        const files = Array.from(document.getElementById("photoInput").files);
+    photoDropZone.addEventListener("click", openFileSelector);
+    photoDropZone.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openFileSelector();
+        }
+    });
+
+    photoDropZone.addEventListener("dragenter", event => {
+        event.preventDefault();
+        photoDragDepth++;
+        photoDropZone.classList.add("drag-over");
+    });
+
+    photoDropZone.addEventListener("dragover", event => {
+        event.preventDefault();
+        if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
+        photoDropZone.classList.add("drag-over");
+    });
+
+    photoDropZone.addEventListener("dragleave", event => {
+        event.preventDefault();
+        photoDragDepth = Math.max(0, photoDragDepth - 1);
+        if (photoDragDepth === 0) photoDropZone.classList.remove("drag-over");
+    });
+
+    photoDropZone.addEventListener("drop", event => {
+        event.preventDefault();
+        photoDragDepth = 0;
+        photoDropZone.classList.remove("drag-over");
+
+        // Use the same checks for dropped files and manually selected files.
+        if (!selectedBookingId || !selectedCatalogId) {
+            openFileSelector();
+            return;
+        }
+        validatePhotos(event.dataTransfer ? event.dataTransfer.files : []);
+    });
+
+    photoInput.addEventListener("change", () => validatePhotos(photoInput.files));
+
+    function validatePhotos(fileList) {
+        const files = Array.from(fileList || []);
         const result = document.getElementById("validationResult");
         result.innerHTML = "";
         validatedFiles = [];
 
         if (files.length === 0) return;
 
+        let rejectedCount = 0;
+
         files.forEach(file => {
             const allowedTypes = ["image/jpeg", "image/png"];
             const maximumSize = 10 * 1024 * 1024;
 
-            const typeValid = allowedTypes.includes(file.type);
-            const sizeValid = file.size <= maximumSize;
+            const extension = file.name.split(".").pop().toLowerCase();
+            const allowedExtensions = ["jpg", "jpeg", "png"];
+
+            const typeValid = allowedTypes.includes(file.type) &&
+                allowedExtensions.includes(extension) &&
+                (extension === "png" ? file.type === "image/png" : file.type === "image/jpeg");
+            const sizeValid = file.size > 0 && file.size <= maximumSize;
             const valid = typeValid && sizeValid;
 
             if (valid) {
                 validatedFiles.push(file);
+            } else {
+                rejectedCount++;
             }
 
             const row = document.createElement("div");
             row.className = "border rounded p-3 mb-2 d-flex justify-content-between align-items-center bg-white";
 
             let reason = "";
-            if (!typeValid) reason = "Invalid file type";
+            if (!typeValid) reason = "Invalid file type - only JPG, JPEG and PNG are allowed";
+            else if (file.size === 0) reason = "Empty file";
             else if (!sizeValid) reason = "File exceeds 10 MB";
 
-            row.innerHTML = `
-                <div>
-                    <i class="bi bi-image me-2 text-primary"></i>
-                    <strong>${file.name}</strong>
-                    <div class="small text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
-                </div>
-                ${valid
-                    ? `<span class="badge badge-soft-success">Valid</span>`
-                    : `<span class="badge badge-soft-danger">${reason}</span>`
-                }
-            `;
+            const details = document.createElement("div");
+            const name = document.createElement("strong");
+            name.textContent = file.name;
+            details.appendChild(name);
+            const size = document.createElement("div");
+            size.className = "small text-muted";
+            size.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+            details.appendChild(size);
+            row.appendChild(details);
+
+            const badge = document.createElement("span");
+            badge.className = valid ? "badge badge-soft-success" : "badge badge-soft-danger";
+            badge.textContent = valid ? "Valid" : reason;
+            row.appendChild(badge);
             result.appendChild(row);
         });
+
+        if (rejectedCount > 0) {
+            const error = document.createElement("div");
+            error.className = "alert alert-danger mb-3";
+            error.setAttribute("role", "alert");
+            error.textContent = `${rejectedCount} file(s) rejected. Only JPG, JPEG and PNG photos up to 10 MB each are allowed.`;
+            result.prepend(error);
+        }
     }
 
     function clearSelectedPhotos() {
