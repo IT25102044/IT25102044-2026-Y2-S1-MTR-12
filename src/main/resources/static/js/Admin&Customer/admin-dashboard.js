@@ -724,11 +724,14 @@ function openBookingDetailsModal(bookingId) {
     if (statusEl) {
         const st = (booking.bookingStatus || 'Pending').toLowerCase();
         statusEl.textContent = booking.bookingStatus || 'Pending';
-        if (st === 'confirmed') statusEl.className = 'badge badge-soft-success mt-1';
+        if (st === 'confirmed' || st === 'active') statusEl.className = 'badge badge-soft-success mt-1';
         else if (st === 'completed') statusEl.className = 'badge badge-soft-primary mt-1';
         else if (st === 'cancelled') statusEl.className = 'badge badge-soft-danger mt-1';
         else statusEl.className = 'badge badge-soft-warning mt-1';
     }
+
+    // Update visual booking status tracker & progress bar
+    updateBookingStatusTracker(booking.bookingStatus, 'admin');
 
     const editBtn = document.getElementById('detailEditBtn');
     if (editBtn) {
@@ -739,6 +742,88 @@ function openBookingDetailsModal(bookingId) {
     if (modalEl) {
         const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
         instance.show();
+    }
+}
+
+// Visual Booking Status Tracker Updater
+function updateBookingStatusTracker(status, prefix = 'admin') {
+    const rawStatus = (status || 'Pending').toString().trim();
+    const st = rawStatus.toLowerCase();
+
+    const progressBar = document.getElementById(`${prefix}DetailProgressBar`);
+    const statusPill = document.getElementById(`${prefix}DetailStatusPill`);
+    const statusAlertContainer = document.getElementById(`${prefix}DetailStatusAlert`);
+    const step1 = document.getElementById(`${prefix}Step1`);
+    const step2 = document.getElementById(`${prefix}Step2`);
+    const step3 = document.getElementById(`${prefix}Step3`);
+    const step4 = document.getElementById(`${prefix}Step4`);
+
+    if (!progressBar || !statusPill) return;
+
+    // Reset base classes for steps
+    [step1, step2, step3, step4].forEach(s => { if (s) s.className = 'step-node'; });
+
+    if (st === 'cancelled') {
+        progressBar.style.width = '100%';
+        progressBar.className = 'progress-bar bg-danger';
+        statusPill.textContent = 'Cancelled';
+        statusPill.className = 'badge badge-soft-danger px-3 py-1 fw-bold';
+        [step1, step2, step3, step4].forEach(s => { if (s) s.className = 'step-node cancelled'; });
+        if (statusAlertContainer) {
+            statusAlertContainer.innerHTML = `
+                <div class="alert alert-danger py-2 px-3 d-flex align-items-center mb-0 rounded-3 small">
+                    <i class="bi bi-x-circle-fill fs-5 me-2 text-danger"></i>
+                    <div><strong>Booking Cancelled:</strong> This event booking request is cancelled/rejected and is no longer active.</div>
+                </div>`;
+        }
+    } else if (st === 'completed') {
+        progressBar.style.width = '100%';
+        progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-primary';
+        statusPill.textContent = 'Completed';
+        statusPill.className = 'badge badge-soft-primary px-3 py-1 fw-bold';
+        if (step1) step1.className = 'step-node completed';
+        if (step2) step2.className = 'step-node completed';
+        if (step3) step3.className = 'step-node completed';
+        if (step4) step4.className = 'step-node active-completed';
+        if (statusAlertContainer) {
+            statusAlertContainer.innerHTML = `
+                <div class="p-2 px-3 bg-primary-subtle border border-primary-subtle rounded-3 small text-primary d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill me-2 fs-6"></i>
+                    <span><strong>Event Completed:</strong> Photo shoot was completed successfully and deliverables are delivered to the customer.</span>
+                </div>`;
+        }
+    } else if (st === 'confirmed' || st === 'active') {
+        progressBar.style.width = '65%';
+        progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-success';
+        statusPill.textContent = rawStatus;
+        statusPill.className = 'badge badge-soft-success px-3 py-1 fw-bold';
+        if (step1) step1.className = 'step-node completed';
+        if (step2) step2.className = 'step-node active-confirmed';
+        if (step3) step3.className = 'step-node';
+        if (step4) step4.className = 'step-node';
+        if (statusAlertContainer) {
+            statusAlertContainer.innerHTML = `
+                <div class="p-2 px-3 bg-success-subtle border border-success-subtle rounded-3 small text-success d-flex align-items-center">
+                    <i class="bi bi-calendar2-check-fill me-2 fs-6"></i>
+                    <span><strong>Booking Confirmed:</strong> Date locked for event photography coverage.</span>
+                </div>`;
+        }
+    } else {
+        progressBar.style.width = '25%';
+        progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-warning text-dark';
+        statusPill.textContent = 'Pending';
+        statusPill.className = 'badge badge-soft-warning px-3 py-1 fw-bold';
+        if (step1) step1.className = 'step-node active-pending';
+        if (step2) step2.className = 'step-node';
+        if (step3) step3.className = 'step-node';
+        if (step4) step4.className = 'step-node';
+        if (statusAlertContainer) {
+            statusAlertContainer.innerHTML = `
+                <div class="p-2 px-3 bg-warning-subtle border border-warning-subtle rounded-3 small text-warning-emphasis d-flex align-items-center">
+                    <i class="bi bi-clock-history me-2 fs-6"></i>
+                    <span><strong>Request Pending:</strong> Submitted successfully. Awaiting review and confirmation.</span>
+                </div>`;
+        }
     }
 }
 

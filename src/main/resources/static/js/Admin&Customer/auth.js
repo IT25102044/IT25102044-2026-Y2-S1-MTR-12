@@ -88,10 +88,16 @@ async function signIn() {
         if (response.ok && data.status && data.data) {
             const user = data.data;
             const userRole = user.role || '';
-            const targetDashboard = getDashboardForRole(userRole);
+            let targetDashboard = getDashboardForRole(userRole);
 
-            // Clear any lingering session redirect
+            // Check if there is a pending redirect intended for the customer
+            const normalizedRole = userRole.toString().trim().toUpperCase().replace(/[\s-]+/g, '_');
+            const postLoginRedirect = sessionStorage.getItem('postLoginRedirect');
             sessionStorage.removeItem('postLoginRedirect');
+
+            if ((normalizedRole === 'CUSTOMER' || normalizedRole === 'CLIENT') && postLoginRedirect) {
+                targetDashboard = postLoginRedirect;
+            }
 
             console.log(`Authenticated as ${userRole}. Redirecting to: ${targetDashboard}`);
             window.location.href = targetDashboard;
@@ -104,3 +110,70 @@ async function signIn() {
         alert("An error occurred while connecting to the server.");
     }
 }
+
+async function signUp() {
+    const firstName = (document.getElementById('registerFirstName')?.value || '').trim();
+    const lastName = (document.getElementById('registerLastName')?.value || '').trim();
+    const email = (document.getElementById('registerEmail')?.value || '').trim();
+    const mobile = (document.getElementById('registerMobile')?.value || '').trim();
+    const password = (document.getElementById('registerPassword')?.value || '').trim();
+    const confirmPassword = (document.getElementById('registerConfirmPassword')?.value || '').trim();
+    const termsAgree = document.getElementById('termsAgree')?.checked;
+
+    if (!firstName || !lastName) {
+        alert("Please provide both your first name and last name.");
+        return;
+    }
+    if (!email) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+    if (!mobile) {
+        alert("Please enter your contact mobile number.");
+        return;
+    }
+    if (!password || password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return;
+    }
+    if (password !== confirmPassword) {
+        alert("Passwords do not match. Please verify.");
+        return;
+    }
+    if (!termsAgree) {
+        alert("Please agree to the Terms of Service to create an account.");
+        return;
+    }
+
+    const payload = {
+        firstName,
+        lastName,
+        email,
+        mobile,
+        password,
+        role: "CUSTOMER"
+    };
+
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status) {
+            alert("Account created successfully! Please sign in with your credentials.");
+            window.location.href = 'login.html';
+        } else {
+            alert(data.message || "Registration failed. Please check your information.");
+        }
+    } catch (error) {
+        console.error("Error during registration:", error);
+        alert("An error occurred while connecting to the server.");
+    }
+}
+

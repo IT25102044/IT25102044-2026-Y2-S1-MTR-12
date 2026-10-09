@@ -1,5 +1,6 @@
 package com.event.snappro.SnapPro.controller;
 
+import com.event.snappro.SnapPro.dto.CreateUserDTO;
 import com.event.snappro.SnapPro.dto.LoginDTO;
 import com.event.snappro.SnapPro.dto.ResponseDTO;
 import com.event.snappro.SnapPro.service.AuthService;
@@ -39,4 +40,14 @@ public class AuthController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<ResponseDTO> register(@RequestBody CreateUserDTO createUserDTO) {
+        ResponseDTO response = authService.register(createUserDTO);
+        if (!response.isStatus()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+        return ResponseEntity.ok(response);
+    }
 }
+

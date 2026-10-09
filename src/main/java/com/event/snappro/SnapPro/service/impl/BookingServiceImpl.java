@@ -1,11 +1,13 @@
 package com.event.snappro.SnapPro.service.impl;
 
+import com.event.snappro.SnapPro.dto.BookedSlotDTO;
 import com.event.snappro.SnapPro.dto.BookingRequestDTO;
 import com.event.snappro.SnapPro.dto.BookingResponseDTO;
 import com.event.snappro.SnapPro.dto.ResponseDTO;
 import com.event.snappro.SnapPro.entity.*;
 import com.event.snappro.SnapPro.repository.*;
 import com.event.snappro.SnapPro.service.BookingService;
+import com.event.snappro.SnapPro.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final PackageRepository packageRepository;
     private final BookingStatusRepository bookingStatusRepository;
     private final PaymentMethodRepository paymentMethodRepository;
+    private final EmailService emailService;
     private final org.modelmapper.ModelMapper modelMapper;
 
     @Override
@@ -70,6 +73,24 @@ public class BookingServiceImpl implements BookingService {
         }
         if (!endTime.isAfter(startTime)) {
             return new ResponseDTO(false, "Event end time must be after start time.", null);
+        }
+
+        // Date & Time slot overlap validation against existing active bookings
+        List<EventBookingEntity> existingBookingsOnDate = eventBookingRepository.findActiveBookingsByDate(eventDate);
+        for (EventBookingEntity existing : existingBookingsOnDate) {
+            if (existing.getStartTime() != null && existing.getEndTime() != null) {
+                // Overlap condition: (newStart < existingEnd) && (newEnd > existingStart)
+                if (startTime.isBefore(existing.getEndTime()) && endTime.isAfter(existing.getStartTime())) {
+                    String conflictStart = existing.getStartTime().toString().substring(0, 5);
+                    String conflictEnd = existing.getEndTime().toString().substring(0, 5);
+                    String requestedStart = startTime.toString().substring(0, 5);
+                    String requestedEnd = endTime.toString().substring(0, 5);
+                    return new ResponseDTO(false,
+                            "Time Slot Conflict: The selected time (" + requestedStart + " - " + requestedEnd +
+                            ") on " + eventDate + " overlaps with an already booked slot (" + conflictStart + " - " + conflictEnd +
+                            "). Please choose an available time slot.", null);
+                }
+            }
         }
 
         UserEntity customer = userOptional.get();
@@ -143,6 +164,11 @@ public class BookingServiceImpl implements BookingService {
         EventBookingEntity saved = eventBookingRepository.save(bookingEntity);
         BookingResponseDTO responseDTO = convertToDTO(saved);
 
+        // Dispatch asynchronous booking confirmation email to customer
+        String fullName = (customer.getFirstName() != null ? customer.getFirstName() : "") + " " +
+                (customer.getLastName() != null ? customer.getLastName() : "");
+        emailService.sendBookingConfirmationEmail(customer.getEmail(), fullName.trim(), saved);
+
         return new ResponseDTO(true, "Booking request submitted successfully with status 'Pending'!", responseDTO);
     }
 
@@ -161,6 +187,27 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
 
         return new ResponseDTO(true, "Bookings retrieved successfully.", dtoList);
+    }
+
+    @Override
+    public ResponseDTO getBookedSlots(LocalDate date) {
+        List<EventBookingEntity> bookings;
+        if (date != null) {
+            bookings = eventBookingRepository.findActiveBookingsByDate(date);
+        } else {
+            bookings = eventBookingRepository.findUpcomingActiveBookings(LocalDate.now());
+        }
+
+        List<BookedSlotDTO> slots = bookings.stream().map(b -> new BookedSlotDTO(
+                b.getId(),
+                b.getEventDate(),
+                b.getStartTime(),
+                b.getEndTime(),
+                b.getBookingStatus() != null ? b.getBookingStatus().getBookingStatus() : "Confirmed",
+                b.getEventTitle() != null ? b.getEventTitle() : "Booked Shoot"
+        )).collect(Collectors.toList());
+
+        return new ResponseDTO(true, "Booked time slots retrieved successfully.", slots);
     }
 
     private BookingResponseDTO convertToDTO(EventBookingEntity entity) {
